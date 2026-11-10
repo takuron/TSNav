@@ -14,6 +14,7 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 - [架构与模块边界](docs/architecture.md)
 - [Material Web / Tailwind 兼容约定](docs/material_tailwind.md)
 - [国际化架构与文案规范](docs/i18n.md)
+- [品牌图标与生成记录](docs/branding.md)
 - [路线图](docs/TODO.md)
 - [变更日志](docs/Changelog.md)
 

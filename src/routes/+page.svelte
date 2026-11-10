@@ -27,7 +27,7 @@
 <div class="mx-auto max-w-6xl px-5 sm:px-10">
   <header class="flex items-center justify-between py-7">
     <a href="/" class="flex items-center gap-3 no-underline" aria-label={m.home_label()}>
-      <span class="brand-mark" aria-hidden="true">T</span>
+      <img src="/favicon.svg" class="size-9 shrink-0" width="36" height="36" alt="" aria-hidden="true" />
       <span class="text-xl font-semibold tracking-tight">TSNav<span class="text-primary">.</span></span>
     </a>
     <div class="flex flex-wrap items-center justify-end gap-3"><span class="hidden text-sm text-muted sm:inline">{m.header_tagline()}</span><LanguageSwitcher /></div>

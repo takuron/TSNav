@@ -18,3 +18,8 @@
 - 默认中文、Cookie 保存偏好，服务端按请求隔离语言，并输出正确的 HTML lang / dir。
 - 为 Cloudflare Pages 启用 nodejs_compat，并为多语言 HTML 设置缓存边界。
 - 增加资源一致性检查、生成流程和国际化开发规范，以及语言切换、回退和并发 SSR 回归测试。
+
+## 2026-11-10 · 项目图标接入
+
+- 将圆形罗盘图标重绘为 SVG，从 SVG 手动导出 16–1024px PNG 与多尺寸 ICO，保存于 Git 忽略的 design/icons。
+- 替换页头品牌图标、SVG favicon，增加 ICO、PNG 和 Apple 触屏图标声明；运行时副本位于 static。

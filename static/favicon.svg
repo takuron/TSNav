@@ -1,1 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="20" fill="#4f6352"/><path d="M18 22h28M32 22v24M22 34h20" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>TSNav</title>
+  <desc>蓝色圆形底上的暖白罗盘与三个连接节点</desc>
+  <defs>
+    <linearGradient id="sky" x1="210" y1="120" x2="830" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#93ccff"/>
+      <stop offset=".45" stop-color="#45b7f2"/>
+      <stop offset="1" stop-color="#007bb9"/>
+    </linearGradient>
+    <radialGradient id="light" cx="330" cy="280" r="660" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c3e8ff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#78d1ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="orbit" x1="240" y1="250" x2="790" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#dcf5ff"/>
+      <stop offset="1" stop-color="#93dcff"/>
+    </linearGradient>
+    <linearGradient id="needle" x1="670" y1="330" x2="350" y2="710" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fffdf4"/>
+      <stop offset=".48" stop-color="#fff5dc"/>
+      <stop offset=".67" stop-color="#dcf5ff"/>
+      <stop offset="1" stop-color="#93d5f6"/>
+    </linearGradient>
+    <linearGradient id="facet" x1="730" y1="280" x2="300" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".04"/>
+    </linearGradient>
+    <linearGradient id="pivot" x1="488" y1="484" x2="540" y2="548" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#148bc0"/>
+      <stop offset="1" stop-color="#006194"/>
+    </linearGradient>
+    <radialGradient id="node" cx=".3" cy=".25" r=".9">
+      <stop stop-color="#fffdf4"/>
+      <stop offset="1" stop-color="#fff4d9"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#006194" flood-opacity=".18"/>
+    </filter>
+  </defs>
+  <!-- 圆外不绘制背景，保持透明和干净的矢量边缘。 -->
+  <circle cx="512" cy="512" r="448" fill="url(#sky)"/>
+  <circle cx="512" cy="512" r="448" fill="url(#light)"/>
+  <!-- 两段逐渐收尖的轨道对应原图的流动弧线。 -->
+  <g fill="url(#orbit)" opacity=".9">
+    <path d="M233 633C104 371 449 107 681 273C461 149 151 391 233 633Z"/>
+    <path d="M752 377C944 615 580 964 311 776C570 930 899 618 752 377Z"/>
+  </g>
+  <g filter="url(#shadow)">
+    <path d="M768 256L573 565Q568 575 555 583L256 768L438 475Q444 465 456 457Z" fill="url(#needle)"/>
+    <path d="M768 256L512 512L256 768L438 475Q444 465 456 457Z" fill="url(#facet)"/>
+    <circle cx="512" cy="512" r="39" fill="url(#pivot)"/>
+    <g fill="url(#node)">
+      <circle cx="350" cy="287" r="25"/>
+      <circle cx="795" cy="556" r="24"/>
+      <circle cx="389" cy="809" r="24"/>
+    </g>
+  </g>
+</svg>
