@@ -13,6 +13,7 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 - [启动、构建和 Pages 部署](docs/build_setup.md)
 - [架构与模块边界](docs/architecture.md)
 - [Material Web / Tailwind 兼容约定](docs/material_tailwind.md)
+- [国际化架构与文案规范](docs/i18n.md)
 - [路线图](docs/TODO.md)
 - [变更日志](docs/Changelog.md)
 
@@ -63,7 +64,9 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 
 ### 3.7 可访问性、数据与安全
 
-- 当前界面语言为简体中文，尚未引入 i18n。需要多语言时先设计统一入口，不沿用旧扩展的语言资源。
+- 国际化使用 Paraglide JS 3，默认简体中文并提供英文，遵循 [国际化规范](docs/i18n.md)。所有 UI 文案及无障碍标签必须调用类型化消息函数；同时维护 `messages/zh-CN.json` 和 `messages/en.json` 的键与参数。品牌名与带 lang 的语言自称除外。
+- 语言优先读取 Cookie，缺失或无效时回退中文；切换使用 `setLocale()` 默认重载，不自行维护全局语言 store、不关闭 AsyncLocalStorage。
+- 分类使用稳定 ID；只保存消息函数引用，禁止模块顶层求值。自动生成的 `src/lib/paraglide/` 不提交、不手改，第三方生成代码不适用中文注释要求。
 - 表单有明确 label，键盘焦点可见；筛选状态可读，空结果有恢复路径；尊重减少动态效果偏好。
 - 导航用真实链接，外链使用 HTTPS；新标签链接带 `rel="noopener noreferrer"` 并说明打开方式。
 - 不引入分析上报，不提交凭据与用户数据；浏览器不能读取服务端秘密。

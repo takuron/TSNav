@@ -49,3 +49,7 @@ pnpm test:e2e
 - 尚未部署到 Cloudflare 账户，未验证线上域名与目标浏览器的完整矩阵。
 
 受限工作区执行检查时，可用 `WRANGLER_LOG_PATH=/tmp/tsnav-wrangler.log` 将 Wrangler 日志写入可写目录；这只影响本地诊断日志，不改变构建或部署配置。
+
+## 默认主题配色来源
+
+亮色取自 `design/main/DESIGN.md`、暗色取自 `design/child-dark/DESIGN.md` 的完整 `colors` 色表。正文示例有不同取值，统一优先结构化色表。亮色 primary 为 `#006194`、surface 为 `#f7f9fb`；暗色 primary 为 `#c3e8ff`、surface 为 `#101418`。所有色表角色（包括 fixed、surface-tint、background）均映射到 Material 系统变量和 Tailwind 语义颜色，继续跟随系统主题；shadow / scrim 保持黑色。仅配置全局颜色，不实现原型布局、字体或组件样式。

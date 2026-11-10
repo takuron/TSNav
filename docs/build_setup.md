@@ -45,3 +45,7 @@ pnpm deploy
 不要提交 `.env*`、`.dev.vars*`、Cloudflare token 或账户凭据。以后增加 Pages 绑定时，同步更新 Wrangler 配置与 Wrangler 生成的绑定类型，再用 pages:dev 验证。服务器秘密不得以 PUBLIC_ 前缀暴露给前端。
 
 参考：[Cloudflare 官方 SvelteKit Pages 指南](https://developers.cloudflare.com/pages/framework-guides/deploy-a-svelte-kit-site/)。
+
+## i18n 构建
+
+已接入 Paraglide JS 3。`pnpm check` 自动校验并编译语言资源，再进行类型检查；`pnpm build` 自动校验资源并由 Vite 编译消息。翻译源与 project.inlang 配置必须提交，src/lib/paraglide 是生成目录，禁止手改。格式插件使用锁文件中的本地依赖，无构建时 CDN 下载。Pages 的 nodejs_compat 用于 AsyncLocalStorage 请求语言隔离，不应移除。详见 [国际化架构](i18n.md)。

@@ -13,3 +13,6 @@ test-results/
 .DS_Store
 
 design/
+
+/src/lib/paraglide/
+/project.inlang/cache/
