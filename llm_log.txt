@@ -1,0 +1,1 @@
+[2026-11-10T19:07:09+08:00] 初始化 TSNav：使用 pnpm 搭建 SvelteKit 3、Svelte 5、TypeScript 6、Cloudflare Pages、Tailwind v4 和 Material Web；改写开发规范与架构文档，落实无 Preflight、共享主题令牌和水合前客户端注册方案；提供导航首页与搜索分类。check 零错误零警告，build、peer 检查、锁文件离线安装及 4 项 Chromium 测试通过，未发布。

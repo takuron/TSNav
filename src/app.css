@@ -1,0 +1,116 @@
+/* 只载入主题和工具类，省略 Preflight，避免广域 reset 干扰组件宿主和插槽。 */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Tailwind 与 Material 共用语义令牌，颜色切换不会出现两套主题。 */
+@theme inline {
+  --color-primary: var(--md-sys-color-primary);
+  --color-muted: var(--md-sys-color-on-surface-variant);
+  --color-outline: var(--md-sys-color-outline-variant);
+  --font-sans: var(--md-ref-typeface-plain);
+}
+
+:root {
+  color-scheme: light;
+  --md-ref-typeface-brand: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --md-ref-typeface-plain: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --md-sys-color-primary: #4f6352;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d1e8d1;
+  --md-sys-color-on-primary-container: #102015;
+  --md-sys-color-secondary: #526352;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d5e8d3;
+  --md-sys-color-on-secondary-container: #102010;
+  --md-sys-color-tertiary: #3a656e;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #beeaf5;
+  --md-sys-color-on-tertiary-container: #001f26;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-surface: #f7faf3;
+  --md-sys-color-surface-dim: #d8dbd5;
+  --md-sys-color-surface-bright: #f7faf3;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f1f4ed;
+  --md-sys-color-surface-container: #ebeee7;
+  --md-sys-color-surface-container-high: #e5e8e1;
+  --md-sys-color-surface-container-highest: #dfe4dc;
+  --md-sys-color-on-surface: #191d19;
+  --md-sys-color-on-surface-variant: #424940;
+  --md-sys-color-outline: #72796f;
+  --md-sys-color-outline-variant: #c2c9bd;
+  --md-sys-color-inverse-surface: #2e322d;
+  --md-sys-color-inverse-on-surface: #eff2eb;
+  --md-sys-color-inverse-primary: #b5ccb5;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --md-sys-color-primary: #b5ccb5;
+    --md-sys-color-on-primary: #213625;
+    --md-sys-color-primary-container: #384d3b;
+    --md-sys-color-on-primary-container: #d1e8d1;
+    --md-sys-color-secondary: #b9ccb7;
+    --md-sys-color-on-secondary: #253424;
+    --md-sys-color-secondary-container: #3b4b3a;
+    --md-sys-color-on-secondary-container: #d5e8d3;
+    --md-sys-color-tertiary: #a2ced9;
+    --md-sys-color-on-tertiary: #00363f;
+    --md-sys-color-tertiary-container: #204d56;
+    --md-sys-color-on-tertiary-container: #beeaf5;
+    --md-sys-color-error: #ffb4ab;
+    --md-sys-color-on-error: #690005;
+    --md-sys-color-error-container: #93000a;
+    --md-sys-color-on-error-container: #ffdad6;
+    --md-sys-color-surface: #101510;
+    --md-sys-color-surface-dim: #101510;
+    --md-sys-color-surface-bright: #363b35;
+    --md-sys-color-surface-container-lowest: #0b100b;
+    --md-sys-color-surface-container-low: #191e18;
+    --md-sys-color-surface-container: #1d221c;
+    --md-sys-color-surface-container-high: #272c26;
+    --md-sys-color-surface-container-highest: #323730;
+    --md-sys-color-on-surface: #dfe4da;
+    --md-sys-color-on-surface-variant: #c2c9bd;
+    --md-sys-color-outline: #8c9388;
+    --md-sys-color-outline-variant: #424940;
+    --md-sys-color-inverse-surface: #dfe4da;
+    --md-sys-color-inverse-on-surface: #2e322d;
+    --md-sys-color-inverse-primary: #4f6352;
+  }
+}
+
+@layer base {
+  /* 不使用 * 或 button/input 全局重置，避免触及 Material 的 Light DOM。 */
+  html { font-family: var(--md-ref-typeface-plain); line-height: 1.5; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
+  body { margin: 0; }
+  a { color: inherit; }
+  h1, h2, h3, p { margin-block: 0; }
+  :focus-visible { outline: 3px solid var(--md-sys-color-primary); outline-offset: 4px; }
+}
+
+@layer components {
+  .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); font-weight: 600; }
+  .hero { background: var(--md-sys-color-surface-container); }
+  .search-field { min-height: 56px; --md-outlined-text-field-container-shape: 16px; }
+  .category-chip { font: inherit; font-size: 0.875rem; padding: 8px 18px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 999px; background: transparent; color: var(--md-sys-color-on-surface-variant); cursor: pointer; }
+  .category-chip[aria-pressed='true'] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); border-color: transparent; }
+  .site-card { background: var(--md-sys-color-surface-container-low); }
+  .site-card:hover { background: var(--md-sys-color-surface-container-high); }
+  .site-monogram { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+  .skip-link { position: absolute; left: 1rem; top: -10rem; padding: 1rem; background: var(--md-sys-color-surface); z-index: 10; }
+  .skip-link:focus { top: 1rem; }
+  /* 保留布局但隐藏尚未升级的控件，避免首屏出现无样式文本。 */
+  md-outlined-text-field:not(:defined), md-filled-button:not(:defined) { visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-card { transition: none; }
+}
