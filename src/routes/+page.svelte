@@ -3,6 +3,7 @@
   import { categories, categoryLabels, sites, type Category } from '#lib/data/sites.ts';
 
   import { m } from '#lib/paraglide/messages.js';
+  import Icon from '#lib/components/Icon.svelte';
   import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
 
   let query = $state('');
@@ -64,8 +65,8 @@
         {#each filtered as site (site.id)}
           <a class="site-card group flex flex-col rounded-3xl p-6 no-underline transition-colors" href={site.url} target="_blank" rel="noopener noreferrer" aria-label={m.site_open_label({ name: site.name })}>
             <div class="mb-6 flex items-start justify-between">
-              <span class="site-monogram flex size-12 items-center justify-center rounded-2xl text-base font-semibold" aria-hidden="true">{site.monogram}</span>
-              <span class="text-sm text-muted" aria-hidden="true">↗</span>
+              <span class="site-monogram flex size-12 items-center justify-center rounded-2xl text-base font-semibold" aria-hidden="true"><Icon name={site.icon} /></span>
+              <Icon name="openInNew" size={18} class="text-muted" />
             </div>
             <h3 class="m-0 text-lg font-medium">{site.name}</h3>
             <p class="mt-2 mb-6 text-sm leading-6 text-muted">{site.description()}</p>

@@ -4,7 +4,7 @@
 
 ## 1. 项目与职责
 
-TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google 官方 `@material/web` 的 Material Design 3 网址导航，目标部署平台为 **Cloudflare Pages**。本项目不是浏览器扩展。
+TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google 官方 `@material/web` 的 Material Design 3 网址导航，目标部署平台为 **Cloudflare Pages**。
 
 当前阶段：基础工程、静态站点数据、客户端搜索和分类，保留 SvelteKit SSR。暂不包含账户、后台管理、数据库和远端用户数据同步。
 
@@ -15,6 +15,7 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 - [Material Web / Tailwind 兼容约定](docs/material_tailwind.md)
 - [国际化架构与文案规范](docs/i18n.md)
 - [品牌图标与生成记录](docs/branding.md)
+- [SVG 图标规范](docs/icons.md)
 - [路线图](docs/TODO.md)
 - [变更日志](docs/Changelog.md)
 
@@ -46,10 +47,11 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 
 ### 3.5 Material Design 与 Tailwind
 
-- 只使用 Tailwind v4、官方 Material Web 和 `src/app.css`，不引入 DaisyUI 或另一套 UI 框架。
+- 只使用 Tailwind v4、官方 Material Web 和 `src/app.css`，不引入其他 UI 框架。
 - Tailwind 用于布局、间距、响应式和普通内容。Material 组件内部用官方 CSS 自定义属性调整，不依赖穿透 Shadow DOM 的选择器。
 - 禁止恢复 `@import 'tailwindcss'`；必须保持分离导入 theme 和 utilities，省略 Preflight。
 - 不给 `md-*` 宿主加 `p-*`、`bg-*`、`border-*`、`rounded-*`、`text-*` 来模拟内部主题；宿主只使用宽度、排列等布局工具类。
+- SVG 图标统一使用 Icon.svelte 和有限静态注册表，界面使用 Material Symbols Rounded，品牌使用 Simple Icons，遵循 docs/icons.md；禁止运行时在线加载和不可信 SVG。
 - 所有颜色使用语义令牌；在 `@theme inline` 中映射 Material 变量，浅深主题跟随系统。
 - 组件注册仅在 `src/lib/material/register.ts` 按需导入，并由 `src/hooks.client.ts` 引入；禁止全量 `@material/web/all.js`。
 - 新增自定义元素时同步维护 `elements.d.ts`，仅用 `import type` 引入元素类型。事件读取 `currentTarget`，不要假定 Shadow DOM 事件的 `target` 是原生 input。

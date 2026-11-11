@@ -166,6 +166,12 @@ importers:
 
   .:
     dependencies:
+      '@iconify-icons/material-symbols':
+        specifier: ^2.0.9
+        version: 2.0.9
+      '@iconify-icons/simple-icons':
+        specifier: ^2.0.8
+        version: 2.0.8
       '@material/web':
         specifier: ^2.5.0
         version: 2.5.0
@@ -500,6 +506,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@iconify-icons/material-symbols@2.0.9':
+    resolution: {integrity: sha512-t4yFxGpKT313h0xshPsZ3pT5EPq+gJWn4WR+iZs4R3NnigBE3rYUYWIJpFRrGs5KveLXY9dWXEypXrGHhvM0yg==}
+
+  '@iconify-icons/simple-icons@2.0.8':
+    resolution: {integrity: sha512-T/Y45ZhrMABh+vDGVTrcMZYolnKswfV4xj+odeHU9eYYkTA+f9uDSoaMBgGzOGEBbaSTK6cVulyaMrT5O7MhLQ==}
+
+  '@iconify/types@2.0.0':
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -1779,6 +1794,16 @@ snapshots:
 
   '@esbuild/win32-x64@0.28.2':
     optional: true
+
+  '@iconify-icons/material-symbols@2.0.9':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-icons/simple-icons@2.0.8':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify/types@2.0.0': {}
 
   '@img/colour@1.1.0': {}
 

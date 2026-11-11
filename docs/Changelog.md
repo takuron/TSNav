@@ -23,3 +23,7 @@
 
 - 将圆形罗盘图标重绘为 SVG，从 SVG 手动导出 16–1024px PNG 与多尺寸 ICO，保存于 Git 忽略的 design/icons。
 - 替换页头品牌图标、SVG favicon，增加 ICO、PNG 和 Apple 触屏图标声明；运行时副本位于 static。
+
+## 2026-11-11 · 内置 SVG 图标
+
+- 接入 Material Symbols Rounded 和 Simple Icons 的本地 SVG 数据，统一类型化图标组件，替换站点字母占位及外链箭头，记录来源和许可。

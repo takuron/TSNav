@@ -55,3 +55,7 @@ tests/                        生产预览浏览器集成测试
 ## 国际化边界
 
 服务端 handle 通过 Paraglide 中间件隔离请求语言，并填充 HTML 的 lang/dir；Pages 启用 nodejs_compat。页面通过编译消息函数获取文案，站点描述与分类标签保存函数引用，渲染时解析。默认中文，Cookie 可选择英文；不改变现有路由。HTML 禁用共享缓存。生成产物不纳入版本控制，check / build 负责生成与校验。
+
+## SVG 图标
+
+`src/lib/icons/index.ts` 静态注册 Material Symbols Rounded 与 Simple Icons；`Icon.svelte` 以 currentColor 渲染内联 SVG，SSR 可用。站点数据的 icon 字段替代 monogram，保存类型化图标名。来源、许可、扩展方式见 [图标规范](icons.md)。

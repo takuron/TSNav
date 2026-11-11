@@ -5,3 +5,4 @@
 [2026-11-10T23:31:49+08:00] 将圆形罗盘图标手工重绘为 SVG，保存 design/icons 并从 SVG 导出 12 种尺寸 PNG（16–1024px）及 16/32/48px ICO；按用户要求保持 design 被 Git 忽略，不新增自动生成命令。同步 static 运行时图标，替换页头、favicon 和触屏图标声明，更新品牌文档。check 零错误零警告、build 和 6 项浏览器回归测试通过。
 [2026-11-10T23:34:57+08:00] 将 design 外的项目图标统一改名为 icon.svg、icon.ico、icon-180.png、icon-192.png 和 icon-512.png，同步页面与品牌文档引用，修正母图标已迁至 design/icons 的说明；未修改 design。pnpm check 零错误零警告，build 通过。
 [2026-11-10T23:36:05+08:00] 按用户澄清恢复浏览器约定图标命名 favicon.svg、favicon.ico 和 apple-touch-icon.png，并同步引用；普通品牌图片保留 icon-192.png、icon-512.png。未修改 design。pnpm check 零错误零警告，build 通过。
+[2026-11-11T08:49:15+08:00] 参考 TSTab 本地内置图标方案，接入 Google Material Symbols Rounded 和 Simple Icons 的 Iconify 单图标数据包，新增类型化 SVG 注册表与 Icon 组件，内置12个界面及10个品牌图标并替换首页占位图；同步架构、使用规范和许可证。pnpm check 零错误零警告，build 及6项浏览器回归通过。
