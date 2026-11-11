@@ -2,7 +2,7 @@
   // 根据分类配置递归展示多级目录；名称、说明与站点内容均为静态可定制数据。
   import { goto } from '$app/navigation';
   import PortalShell from '#lib/components/PortalShell.svelte';
-  import NavigationCard from '#lib/components/NavigationCard.svelte';
+  import NavigationCardGrid from '#lib/components/NavigationCardGrid.svelte';
   import Icon from '#lib/components/Icon.svelte';
   import { navigationCategories, categoryPath, collectCategorySites } from '#lib/data/categories.ts';
   import type { CategoryPage, CategorySection } from '#lib/types/navigation.ts';
@@ -32,11 +32,7 @@
       <svelte:element this={`h${Math.min(level, 6)}`} id={`section-${section.id}`}>{section.title}</svelte:element>
     </div>
     {#if section.sites?.length}
-      <div class="directory-grid">
-        {#each section.sites as site (site.id)}
-          <NavigationCard {site} variant="directory" headingLevel={Math.min(level + 1, 6) as 3 | 4 | 5 | 6} />
-        {/each}
-      </div>
+      <NavigationCardGrid sites={section.sites} class="directory-grid" headingLevel={Math.min(level + 1, 6) as 3 | 4 | 5 | 6} />
     {/if}
     {#if section.children?.length}
       <div class="directory-children">

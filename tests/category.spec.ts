@@ -18,10 +18,10 @@ test('分类页可直达且 SSR 输出完整分组、16 个站点和安全外链
   expect(html).toContain('https://react.dev');
   expect(html).toContain('https://istio.io');
   await page.goto('/category/development');
-  await expect(page.locator('.directory-card')).toHaveCount(16);
+  await expect(page.locator('.site-card')).toHaveCount(16);
   await expect(page.locator('.directory-section.level-2')).toHaveCount(3);
   await expect(page.locator('.directory-section.level-4')).toHaveCount(2);
-  for (const link of await page.locator('.directory-card').all()) {
+  for (const link of await page.locator('.site-card').all()) {
     await expect(link).toHaveAttribute('href', /^https:\/\//);
     await expect(link).toHaveAttribute('target', '_blank');
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer');

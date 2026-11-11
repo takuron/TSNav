@@ -74,7 +74,7 @@ tests/                        生产预览浏览器集成测试
 ## 主页组件接口
 
 - `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 false）和 `onselect` / `ontoggle` / `onsettings` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定 i18n 推荐入口。
-- `NavigationCard`：接收 `NavigationSite`、可选 `onvisit(id)`、`variant`（默认 shortcut）和 `headingLevel`（默认 2）。directory 变体提供两行描述、常驻外链图形与目录标题层级；直接输出 SSR 外链，不拦截原生行为。
+- `NavigationCard`：主页和分类页共用同一张卡片，接收 `NavigationSite`、可选 `onvisit(id)` 和 `headingLevel`（默认 2）。访问图标默认隐藏，仅悬停或键盘焦点显示；说明固定为最多两行并省略；直接输出 SSR 外链。`NavigationCardGrid` 负责按实际容器宽度使用 1 / 2 / 3 / 4 列。
 - `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
 - `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。
 - `types/navigation.ts`：导出 `NavigationCategory`、`NavigationSite`、递归 `CategorySection` 和 `CategoryPage`，只描述内容结构，不保存业务数据。
