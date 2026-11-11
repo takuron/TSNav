@@ -1,6 +1,6 @@
 <script lang="ts">
   // 统一展示主页和分类目录的站点卡片，保持原生外链行为和正确标题层级。
-  import { m } from '#lib/paraglide/messages.js';
+  import { copy } from '#lib/copy.ts';
   import Icon from '#lib/components/Icon.svelte';
   import type { NavigationSite } from '#lib/types/navigation.ts';
 
@@ -14,7 +14,7 @@
   } = $props();
 </script>
 
-<a class="site-card" href={site.url} target="_blank" rel="noopener noreferrer" aria-label={m.site_open_label({ name: site.name })} onclick={() => onvisit?.(site.id)}>
+<a class="site-card" href={site.url} target="_blank" rel="noopener noreferrer" aria-label={copy.site_open_label({ name: site.name })} onclick={() => onvisit?.(site.id)}>
   <div class="card-top">
     <span class="site-icon {site.tone}"><Icon name={site.icon} size={26} /></span>
     <span class="card-arrow"><Icon name="openInNew" size={18} /></span>

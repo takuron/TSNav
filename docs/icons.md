@@ -13,7 +13,7 @@
 <Icon name="github" size={24} class="text-primary" />
 ```
 
-装饰图标默认 aria-hidden；独立语义图标的 label 必须来自 i18n。按钮或链接仍需自身可访问名称。组件只允许注册表中的 SVG，禁止把外部内容传给 @html。
+装饰图标默认 aria-hidden；独立语义图标的 label 必须来自 `src/lib/copy.ts`。按钮或链接仍需自身可访问名称。组件只允许注册表中的 SVG，禁止把外部内容传给 @html。
 
 新增图标在注册表静态导入具体子路径。数据包的 exports 不带 .js；项目自身 #lib 导入仍使用显式扩展名。注册表内的图标会随应用打包，保持有限集合，不把整个包动态加载进客户端。
 

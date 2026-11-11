@@ -14,7 +14,7 @@
 4. Material 内部样式用公开令牌设置，例如 Material 按钮的 `--md-filled-button-container-shape`；Tailwind `w-full max-w-xl` 只负责宿主布局。不要尝试用 `rounded-*` 修改内部 field。
 5. `hooks.client.ts` 同步导入注册模块，确保水合开始前元素已定义；SSR 不执行该入口。没有关闭 SSR，也没有把 `@material/web` 作为 CDN 脚本加载。
 6. `elements.d.ts` 对项目用到的元素逐个声明类型，只使用类型导入。Material 的 value 通过属性传入，oninput 通过 currentTarget 读取，不用只适用于原生输入的 bind:value。
-7. 未定义控件暂时 visibility:hidden，；当前搜索框是原生表单，SSR 即可显示；内容链接仍由 SSR 输出。禁用 JS 时搜索不可用，提供 noscript 提示，站点链接仍可访问。
+7. 未定义控件暂时 visibility:hidden，；当前搜索框是原生表单，SSR 即可显示；内容链接仍由 预渲染输出。禁用 JS 时搜索不可用，提供 noscript 提示，站点链接仍可访问。
 
 ## 验证
 
@@ -42,7 +42,7 @@ pnpm test:e2e
 ## 本次验证记录（2026-11-10）
 
 - `pnpm check`：0 错误、0 警告。
-- `pnpm build`：成功生成 Cloudflare Pages Worker 与静态资源。
+- `pnpm build`：成功生成 Cloudflare Pages 静态资源。
 - `pnpm peers check`：无 peer dependency 冲突。
 - `pnpm install --frozen-lockfile --offline`：通过。
 - `pnpm test:e2e`：Chromium 下 4 项测试全部通过（含 Material 按钮 Enter 键激活）。
@@ -57,7 +57,7 @@ pnpm test:e2e
 ## 主页原型验证（2026-11-11）
 
 - `pnpm check`：0 错误、0 警告。
-- `pnpm build`：成功生成 Cloudflare Pages 产物。
+- `pnpm build`：成功生成 Cloudflare Pages 静态产物。
 - `pnpm test:e2e`：Chromium 下 7 项测试全部通过。
 - 搜索框圆角使用 28px；Material 会用 shape 令牌计算内部留白，不能用 999px 模拟胶囊，否则会挤掉输入区。
 - 未部署到 Cloudflare。

@@ -80,51 +80,6 @@ for (const colorScheme of ['light', 'dark'] as const) {
   });
 }
 
-test('语言仅切换通用界面，分类和站点保留自定义内容', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  page.on('console', (message) => { if (message.text().includes('hydration_mismatch')) errors.push(message.text()); });
-  await page.goto('/');
-  await page.getByRole('button', { name: '界面设置', exact: true }).click();
-  await page.getByRole('button', { name: 'English', exact: true }).click();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page).toHaveTitle('TSNav · Good places, one click away');
-  await expect(page.getByRole('searchbox', { name: 'Search the web, technical keywords, or quick commands…' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Recommended', exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: '设计与视觉灵感', exact: true })).toBeVisible();
-  await expect(page.locator('.site-card').first()).toContainText('全球最大的开源代码托管与协作平台');
-  await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await page.getByRole('button', { name: 'Report a broken link' }).click();
-  await expect(page.getByRole('dialog')).toContainText('This frontend prototype has no feedback service yet.');
-  await page.getByRole('combobox').selectOption('figma');
-  await expect(page.getByRole('dialog')).toContainText('https://figma.com');
-  await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Interface settings', exact: true }).click();
-  await page.getByRole('button', { name: '简体中文', exact: true }).click();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-CN');
-  expect(errors).toEqual([]);
-});
-
-test('并发 SSR 隔离语言，未知语言回退中文', async ({ request }) => {
-  const responses = await Promise.all(Array.from({ length: 12 }, async (_, index) => {
-    const locale = index % 2 ? 'en' : 'zh-CN';
-    const response = await request.get('/', { headers: { Cookie: `tsnav_locale=${locale}` } });
-    return { locale, response, html: await response.text() };
-  }));
-  for (const { locale, response, html } of responses) {
-    expect(response.ok()).toBeTruthy();
-    expect(html).toContain(`lang="${locale}"`);
-    expect(html).toContain(locale === 'en' ? 'Search engines' : '搜索引擎');
-    expect(html).toContain(locale === 'en' ? 'Recommended' : '常用推荐');
-    expect(response.headers()['vary']).toContain('Cookie');
-    expect(response.headers()['cache-control']).toBe('private, no-store');
-  }
-  const fallback = await request.get('/', { headers: { Cookie: 'tsnav_locale=unsupported' } });
-  expect(await fallback.text()).toContain('lang="zh-CN"');
-});
-
-
 test('搜索清空按钮按内容显示，清空后保留输入焦点', async ({ page, context }) => {
   await page.goto('/');
   const input = page.getByRole('searchbox');
@@ -245,8 +200,6 @@ test('移动顶栏仅保留菜单入口，侧栏仍保留品牌和设置', async
   await header.getByRole('button', { name: '打开导航菜单' }).click();
   const drawer = page.getByRole('dialog', { name: '站点分类' });
   await expect(drawer.getByRole('link', { name: 'TSNav 首页' })).toBeVisible();
-  await drawer.getByRole('button', { name: '界面设置' }).click();
-  await expect(page.getByRole('dialog', { name: '界面设置' })).toBeVisible();
 });
 
 test('短内容无多余滚动，页脚贴底且搜索和卡片整体居中', async ({ page }) => {
@@ -341,7 +294,7 @@ test('减少动态效果时抽屉与遮罩直接显示', async ({ page }) => {
 test('所有移动抽屉关闭入口等待滑出和遮罩淡出，设置弹窗随后打开', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  for (const action of ['button', 'backdrop', 'escape', 'category', 'settings']) {
+  for (const action of ['button', 'backdrop', 'escape', 'category']) {
     await page.goto('/');
     await page.getByRole('button', { name: '打开导航菜单' }).click();
     const drawer = page.locator('.mobile-drawer');
@@ -352,7 +305,7 @@ test('所有移动抽屉关闭入口等待滑出和遮罩淡出，设置弹窗�
       if (!(element instanceof HTMLDialogElement)) throw new Error('抽屉必须为 dialog');
       if (action === 'escape') element.dispatchEvent(new Event('cancel', { cancelable: true }));
       else {
-        const selector = action === 'button' ? '.sidebar-heading button' : action === 'backdrop' ? '.drawer-backdrop' : action === 'settings' ? '.settings-button' : '.destination';
+        const selector = action === 'button' ? '.sidebar-heading button' : action === 'backdrop' ? '.drawer-backdrop' : '.destination';
         element.querySelector<HTMLButtonElement>(selector)!.click();
       }
       await new Promise(requestAnimationFrame);
@@ -380,7 +333,6 @@ test('所有移动抽屉关闭入口等待滑出和遮罩淡出，设置弹窗�
     expect(motion.settingsOpen).toBe(false);
     expect(motion.scrim).toBe('drawer-scrim-exit');
     await expect(drawer).not.toBeVisible();
-    if (action === 'settings') await expect(page.getByRole('dialog', { name: '界面设置' })).toBeVisible();
-    else await expect(page.getByRole('button', { name: '打开导航菜单' })).toBeFocused();
+    await expect(page.getByRole('button', { name: '打开导航菜单' })).toBeFocused();
   }
 });

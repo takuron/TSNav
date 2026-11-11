@@ -1,6 +1,6 @@
 <script lang="ts">
   // 还原主页原型；分类与站点为可替换的静态内容，交互状态仅保留在页面内。
-  import { m } from '#lib/paraglide/messages.js';
+  import { copy } from '#lib/copy.ts';
   import Icon from '#lib/components/Icon.svelte';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
@@ -23,12 +23,12 @@
   ];
   // 从分类页返回本地筛选时，使用稳定 ID 初始化，不以显示名判定。
   function initialCategory() {
-    const id = page.url.searchParams.get('category');
+    const id = typeof window !== 'undefined' ? page.url.searchParams.get('category') : null;
     return destinations.some((category) => category.id === id && !category.href) ? id! : 'recommended';
   }
   let selected = $state(initialCategory());
   let visited = $state<string[]>([]);
-  const selectedLabel = $derived(selected === 'recommended' ? m.nav_recommended() : destinations.find((item) => item.id === selected)?.label);
+  const selectedLabel = $derived(selected === 'recommended' ? copy.nav_recommended() : destinations.find((item) => item.id === selected)?.label);
   const visibleSites = $derived(selected === 'recent'
     ? visited.map((id) => shortcuts.find((site) => site.id === id)!).filter(Boolean)
     : shortcuts.filter((site) => ['recommended', 'discover'].includes(selected) || site.category === selected));
@@ -44,18 +44,18 @@
 </script>
 
 <svelte:head>
-  <title>{m.page_title()}</title>
-  <meta name="description" content={m.page_description()} />
+  <title>{copy.page_title()}</title>
+  <meta name="description" content={copy.page_description()} />
 </svelte:head>
 
 <PortalShell categories={destinations} {selected} onselect={selectCategory} sites={shortcuts}>
-      <h1 class="sr-only">{m.sites_title()}</h1>
+      <h1 class="sr-only">{copy.sites_title()}</h1>
       <div class="dashboard">
         <SearchBar />
         <section aria-label={selectedLabel}>
           {#if !['recommended', 'discover'].includes(selected)}<h2 class="category-heading">{selectedLabel}</h2>{/if}
           <NavigationCardGrid sites={visibleSites} onvisit={visit} class="home-grid" />
-          {#if visibleSites.length === 0}<div class="empty-state"><Icon name="history" size={36} /><h2>{m.recent_empty()}</h2><p>{m.recent_hint()}</p><!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (Material 内部原生按钮提供键盘行为) --><md-filled-button onclick={() => selectCategory('recommended')}>{m.reset_filters()}</md-filled-button></div>{/if}
+          {#if visibleSites.length === 0}<div class="empty-state"><Icon name="history" size={36} /><h2>{copy.recent_empty()}</h2><p>{copy.recent_hint()}</p><!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (Material 内部原生按钮提供键盘行为) --><md-filled-button onclick={() => selectCategory('recommended')}>{copy.reset_filters()}</md-filled-button></div>{/if}
         </section>
       </div>
 </PortalShell>

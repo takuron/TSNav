@@ -6,14 +6,13 @@
 
 TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google 官方 `@material/web` 的 Material Design 3 网址导航，目标部署平台为 **Cloudflare Pages**。
 
-当前阶段：基础工程、静态站点数据、客户端搜索和分类，保留 SvelteKit SSR。暂不包含账户、后台管理、数据库和远端用户数据同步。
+当前阶段：基础工程、静态站点数据、客户端搜索和分类，使用 SvelteKit SSG。暂不包含账户、后台管理、数据库和远端用户数据同步。
 
 ## 2. 文档入口
 
 - [启动、构建和 Pages 部署](docs/build_setup.md)
 - [架构与模块边界](docs/architecture.md)
 - [Material Web / Tailwind 兼容约定](docs/material_tailwind.md)
-- [国际化架构与文案规范](docs/i18n.md)
 - [品牌图标与生成记录](docs/branding.md)
 - [SVG 图标规范](docs/icons.md)
 - [路线图](docs/TODO.md)
@@ -41,8 +40,8 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 - 内部模块使用 `#lib/*` 子路径映射和显式扩展名；配置集中在 Vite 的 `sveltekit(...)` 插件中。
 - 新代码使用 `$props`、`$state`、`$derived`，事件使用 `onclick`、`oninput` 等属性语法。
 - 派生值用 `$derived`，不要用 `$effect` 同步同一份状态。局部状态就近保留。
-- SSR 不可访问 `window`、`document`、`localStorage`、`customElements`；浏览器行为放在客户端入口或 `onMount`。
-- 不通过关闭全局 SSR 来绕过 Web Components 兼容问题。
+- 构建阶段不可访问 `window`、`document`、`localStorage`、`customElements`；浏览器行为放在客户端入口或 `onMount`。
+- 页面必须保持可预渲染；不要新增依赖服务端请求、动态 API 或运行时 Worker 的逻辑。
 - 数据与界面分离。可复用 UI 放 `src/lib/components/`（需要时再建立），业务数据放 `src/lib/data/`。
 
 ### 3.5 Material Design 与 Tailwind
@@ -67,9 +66,9 @@ TSNav 是基于 SvelteKit 3、Svelte 5、TypeScript、Tailwind CSS v4 和 Google
 
 ### 3.7 可访问性、数据与安全
 
-- 国际化使用 Paraglide JS 3，默认简体中文并提供英文，遵循 [国际化规范](docs/i18n.md)。所有 UI 文案及无障碍标签必须调用类型化消息函数；同时维护 `messages/zh-CN.json` 和 `messages/en.json` 的键与参数。品牌名与带 lang 的语言自称除外。
+- 所有 UI 文案和无障碍标签使用 `src/lib/copy.ts` 中的中文文案；站点内容与界面文案分离，后续由独立数据逻辑提供。
 - 语言优先读取 Cookie，缺失或无效时回退中文；切换使用 `setLocale()` 默认重载，不自行维护全局语言 store、不关闭 AsyncLocalStorage。
-- 分类使用稳定 ID；只保存消息函数引用，禁止模块顶层求值。自动生成的 `src/lib/paraglide/` 不提交、不手改，第三方生成代码不适用中文注释要求。
+- 分类使用稳定 ID；界面文案集中在 `src/lib/copy.ts`，站点内容与界面文案分离。
 - 表单有明确 label，键盘焦点可见；筛选状态可读，空结果有恢复路径；尊重减少动态效果偏好。
 - 导航用真实链接，外链使用 HTTPS；新标签链接带 `rel="noopener noreferrer"` 并说明打开方式。
 - 不引入分析上报，不提交凭据与用户数据；浏览器不能读取服务端秘密。

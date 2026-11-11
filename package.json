@@ -9,15 +9,13 @@
   },
   "scripts": {
     "dev": "vite dev",
-    "build": "pnpm i18n:check && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync",
-    "check": "pnpm i18n:check && pnpm i18n:compile && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test:e2e": "playwright test",
     "pages:dev": "pnpm build && wrangler pages dev",
-    "deploy": "pnpm check && pnpm build && wrangler pages deploy",
-    "i18n:compile": "paraglide-js compile --project ./project.inlang",
-    "i18n:check": "node scripts/check-messages.mjs"
+    "deploy": "pnpm check && pnpm build && wrangler pages deploy"
   },
   "dependencies": {
     "@iconify-icons/material-symbols": "^2.0.9",
@@ -25,10 +23,8 @@
     "@material/web": "^2.5.0"
   },
   "devDependencies": {
-    "@inlang/paraglide-js": "^3.2.1",
-    "@inlang/plugin-message-format": "^4.6.0",
     "@playwright/test": "^1.65.0",
-    "@sveltejs/adapter-cloudflare": "^8.0.2",
+    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^3.1.1",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tailwindcss/vite": "^4.3.5",

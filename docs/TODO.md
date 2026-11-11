@@ -3,7 +3,7 @@
 ## 已完成
 
 - [x] SvelteKit / TypeScript / pnpm 基础工程
-- [x] Cloudflare Pages adapter 与 Wrangler 配置
+- [x] adapter-static 与 Wrangler 配置
 - [x] Tailwind v4 / Material Web 样式边界和主题令牌
 - [x] 首页示例数据、搜索、分类、响应式与浅深主题
 - [x] 开发规范和兼容回归测试入口
@@ -13,6 +13,6 @@
 - [ ] 确定正式站点分类、视觉品牌和内容维护方式
 - [ ] 确定是否需要收藏、排序与本地偏好保存
 - [ ] 如需自定义链接，增加 URL 校验与编辑交互
-- [x] Paraglide JS 中英文资源、语言入口与 SSR 请求隔离
+- [x] 单语言中文文案与静态页面入口
 - [ ] 按需增加其他语言与多语言 URL / SEO 策略
 - [ ] 在用户授权后连接仓库并发布到 Cloudflare Pages

@@ -2,15 +2,15 @@
   // 按 M3 Search 样式提供引擎切换、回车搜索与条件清空，不使用浮动文本标签。
   import { onMount } from 'svelte';
   import type { MdMenu, CloseMenuEvent } from '@material/web/menu/menu.js';
-  import { m } from '#lib/paraglide/messages.js';
+  import { copy } from '#lib/copy.ts';
   import Icon from '#lib/components/Icon.svelte';
   import type { IconName } from '#lib/icons/index.ts';
 
   const engines: { id: string; name: () => string; icon: IconName; url: string }[] = [
     { id: 'google', name: () => 'Google', icon: 'google', url: 'https://www.google.com/search?q=' },
-    { id: 'baidu', name: m.engine_baidu, icon: 'baidu', url: 'https://www.baidu.com/s?wd=' },
+    { id: 'baidu', name: copy.engine_baidu, icon: 'baidu', url: 'https://www.baidu.com/s?wd=' },
     { id: 'bing', name: () => 'Bing', icon: 'microsoftbing', url: 'https://www.bing.com/search?q=' },
-    { id: 'sogou', name: m.engine_sogou, icon: 'sogou', url: 'https://www.sogou.com/web?query=' },
+    { id: 'sogou', name: copy.engine_sogou, icon: 'sogou', url: 'https://www.sogou.com/web?query=' },
     { id: 'duckduckgo', name: () => 'DuckDuckGo', icon: 'duckduckgo', url: 'https://duckduckgo.com/?q=' }
   ];
 
@@ -64,8 +64,8 @@
   }
 </script>
 
-<section class="search-panel" aria-label={m.search_engines()}>
-  <div class="engine-tabs" role="group" aria-label={m.search_engines()}>
+<section class="search-panel" aria-label={copy.search_engines()}>
+  <div class="engine-tabs" role="group" aria-label={copy.search_engines()}>
     {#each engines as item}
       <button type="button" class="engine-tab" aria-pressed={engine.id === item.id} onclick={() => { engineId = item.id; }}>
         <span class="engine-mark" aria-hidden="true"><Icon name={item.icon} size={16} /></span>{item.name()}
@@ -73,7 +73,7 @@
     {/each}
   </div>
   <div class="engine-picker">
-    <button class="engine-tab engine-trigger" type="button" bind:this={trigger} aria-pressed="true" aria-label={m.search_engine_choose({ name: engine.name() })} aria-haspopup="menu" aria-expanded={menuOpen} aria-controls={`${id}-engines`} onclick={toggleMenu} onkeydown={(event) => {
+    <button class="engine-tab engine-trigger" type="button" bind:this={trigger} aria-pressed="true" aria-label={copy.search_engine_choose({ name: engine.name() })} aria-haspopup="menu" aria-expanded={menuOpen} aria-controls={`${id}-engines`} onclick={toggleMenu} onkeydown={(event) => {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault();
         openMenu(event.key === 'ArrowUp');
@@ -81,7 +81,7 @@
     }}>
       <span class="engine-mark" aria-hidden="true"><Icon name={engine.icon} size={16} /></span>{engine.name()}
     </button>
-    <md-menu class="engine-menu" id={`${id}-engines`} bind:this={menu} positioning="popover" anchor-corner="end-start" menu-corner="start-start" y-offset={8} aria-label={m.search_engines()} onopening={() => { menuOpen = true; }} onclosed={() => { menuOpen = false; }}>
+    <md-menu class="engine-menu" id={`${id}-engines`} bind:this={menu} positioning="popover" anchor-corner="end-start" menu-corner="start-start" y-offset={8} aria-label={copy.search_engines()} onopening={() => { menuOpen = true; }} onclosed={() => { menuOpen = false; }}>
       {#each engines as item}
         <md-menu-item selected={engineId === item.id} aria-current={engineId === item.id ? 'true' : undefined} onclose-menu={(event) => selectEngine(event, item.id)}>
           <span slot="start" class="engine-menu-icon"><Icon name={item.icon} size={16} /></span>
@@ -91,12 +91,12 @@
       {/each}
     </md-menu>
   </div>
-  <form class="search-row" role="search" aria-label={m.search_label()} onsubmit={search}>
+  <form class="search-row" role="search" aria-label={copy.search_label()} onsubmit={search}>
     <span class="search-leading"><Icon name="search" size={24} /></span>
-    <input class="search-input" bind:this={input} bind:value={query} type="search" aria-label={m.search_label()} placeholder={m.search_placeholder()} enterkeyhint="search" autocomplete="off" onkeydown={(event) => { if (event.key === 'Enter' && event.isComposing) event.preventDefault(); }} />
+    <input class="search-input" bind:this={input} bind:value={query} type="search" aria-label={copy.search_label()} placeholder={copy.search_placeholder()} enterkeyhint="search" autocomplete="off" onkeydown={(event) => { if (event.key === 'Enter' && event.isComposing) event.preventDefault(); }} />
     {#if query.length > 0}
-      <button type="button" class="icon-button search-clear" aria-label={m.search_clear()} title={m.search_clear()} onclick={clear}><Icon name="close" size={24} /></button>
+      <button type="button" class="icon-button search-clear" aria-label={copy.search_clear()} title={copy.search_clear()} onclick={clear}><Icon name="close" size={24} /></button>
     {/if}
   </form>
-  <noscript><p class="noscript-hint">{m.noscript_hint()}</p></noscript>
+  <noscript><p class="noscript-hint">{copy.noscript_hint()}</p></noscript>
 </section>

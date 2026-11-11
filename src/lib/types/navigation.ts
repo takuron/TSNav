@@ -9,7 +9,7 @@ export interface NavigationCategory {
   href?: string;
 }
 
-/** 导航卡片的静态内容，不随界面语言切换。 */
+/** 导航卡片的静态内容，属于静态示例内容。 */
 export interface NavigationSite {
   id: string;
   name: string;

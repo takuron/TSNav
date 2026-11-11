@@ -25,7 +25,7 @@ pnpm build
 pnpm test:e2e
 ```
 
-已接入 Paraglide JS，中英文可在侧栏设置中切换，默认中文并保存语言偏好。文案开发见 [国际化说明](docs/i18n.md)。
+界面固定使用简体中文，文案集中维护在 `src/lib/copy.ts`。
 
 当前主页包含 8 个快捷站点、五引擎搜索、分类筛选、响应式布局和系统浅深主题。主页站点编辑 `src/routes/+page.svelte`。
 
@@ -33,6 +33,6 @@ pnpm test:e2e
 
 ## 部署
 
-已配置 `@sveltejs/adapter-cloudflare` 和 `wrangler.jsonc`。Pages 构建命令为 `pnpm build`，输出目录为 `.svelte-kit/cloudflare`。本项目初始化不自动发布。
+已配置 `@sveltejs/adapter-static` 和 `wrangler.jsonc`。Pages 构建命令为 `pnpm build`，输出目录为 `build`，主页和分类页均为构建时生成的静态 HTML。本项目初始化不自动发布。
 
 完整步骤见 [构建说明](docs/build_setup.md)。开发前阅读 [开发规范](llm_readme.md) 和 [样式兼容说明](docs/material_tailwind.md)。

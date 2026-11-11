@@ -1,4 +1,4 @@
-# 启动、检查与 Cloudflare Pages
+# 启动、检查与 Cloudflare Pages 静态部署
 
 ## 环境
 
@@ -14,9 +14,9 @@ pnpm preview
 
 - `dev`：Vite 热更新开发环境。
 - `check`：生成 SvelteKit 类型并运行 svelte-check。
-- `build`：Cloudflare adapter 产出 `.svelte-kit/cloudflare`，不可手动编辑。
+- `build`：adapter-static 将主页和分类页预渲染到 `build/`，可直接交给静态文件服务器。
 - `preview`：本地预览生产构建。
-- `pages:dev`：构建后以 Wrangler Pages 本地模拟运行，部署前可检查平台行为。
+- `pages:dev`：构建后以 Wrangler Pages 本地模拟静态资源，部署前可检查平台行为。
 
 首次浏览器测试运行 `pnpm exec playwright install chromium`，系统缺失浏览器依赖时按 Playwright 提示安装。运行 `pnpm build && pnpm test:e2e`；测试自行启动 4173 端口的生产预览。
 
@@ -24,7 +24,7 @@ pnpm preview
 
 1. 将仓库推送到你的 Git 提供商，在 Cloudflare Pages 新建并连接仓库。
 2. 框架选择 SvelteKit，根目录为项目根目录。
-3. 构建命令：`pnpm build`；构建输出：`.svelte-kit/cloudflare`。
+3. 构建命令：`pnpm build`；构建输出：`build`。
 4. 在构建环境设置 `NODE_VERSION=22`，`PNPM_VERSION` 与 package.json 的 packageManager 保持一致。
 5. 当前无必需的应用环境变量或外部数据绑定。
 
@@ -44,8 +44,8 @@ pnpm deploy
 
 不要提交 `.env*`、`.dev.vars*`、Cloudflare token 或账户凭据。以后增加 Pages 绑定时，同步更新 Wrangler 配置与 Wrangler 生成的绑定类型，再用 pages:dev 验证。服务器秘密不得以 PUBLIC_ 前缀暴露给前端。
 
-参考：[Cloudflare 官方 SvelteKit Pages 指南](https://developers.cloudflare.com/pages/framework-guides/deploy-a-svelte-kit-site/)。
+参考：[Cloudflare Pages 静态站点文档](https://developers.cloudflare.com/pages/framework-guides/deploy-anything/)。
 
-## i18n 构建
+## 中文文案构建
 
-已接入 Paraglide JS 3。`pnpm check` 自动校验并编译语言资源，再进行类型检查；`pnpm build` 自动校验资源并由 Vite 编译消息。翻译源与 project.inlang 配置必须提交，src/lib/paraglide 是生成目录，禁止手改。格式插件使用锁文件中的本地依赖，无构建时 CDN 下载。Pages 的 nodejs_compat 用于 AsyncLocalStorage 请求语言隔离，不应移除。详见 [国际化架构](i18n.md)。
+单语言界面文案集中在 `src/lib/copy.ts`，构建阶段不再编译翻译资源。静态部署不需要 nodejs_compat 或服务端语言隔离。

@@ -1,11 +1,9 @@
 <script lang="ts">
   // 复用主页与分类页的侧栏、移动抽屉、页脚和设置，内容布局由页面选择。
   import type { Snippet } from 'svelte';
-  import { m } from '#lib/paraglide/messages.js';
+  import { copy } from '#lib/copy.ts';
   import Sidebar from '#lib/components/Sidebar.svelte';
   import Footer from '#lib/components/Footer.svelte';
-  import Icon from '#lib/components/Icon.svelte';
-  import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
   import type { NavigationCategory, NavigationSite } from '#lib/types/navigation.ts';
 
   let { categories, selected, onselect, sites, variant = 'home', children }: {
@@ -23,18 +21,13 @@
     children: Snippet;
   } = $props();
   let collapsed = $state(false);
-  let settings: HTMLDialogElement;
 </script>
 
-<a class="skip-link" href="#content">{m.skip_content()}</a>
+<a class="skip-link" href="#content">{copy.skip_content()}</a>
 <div class="portal" class:collapsed>
-  <Sidebar {categories} {selected} {onselect} {collapsed} ontoggle={() => { collapsed = !collapsed; }} onsettings={() => settings.showModal()} />
+  <Sidebar {categories} {selected} {onselect} {collapsed} ontoggle={() => { collapsed = !collapsed; }} />
   <div class="main-wrapper">
     <main id="content" class={variant === 'home' ? 'portal-main' : 'directory-main'}>{@render children()}</main>
     <Footer {sites} />
   </div>
 </div>
-<dialog class="utility-dialog" bind:this={settings} aria-labelledby="settings-title">
-  <div class="dialog-heading"><h2 id="settings-title">{m.settings_label()}</h2><button class="icon-button" type="button" aria-label={m.dialog_close()} onclick={() => settings.close()}><Icon name="close" size={20} /></button></div>
-  <p>{m.language_label()}</p><LanguageSwitcher />
-</dialog>

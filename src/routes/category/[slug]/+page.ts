@@ -1,6 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import { findCategoryBySlug } from '#lib/data/categories.ts';
+import { categoryPages, findCategoryBySlug } from '#lib/data/categories.ts';
+
+export const entries = () => categoryPages.map(({ slug }) => ({ slug }));
 
 // 路由参数由 SvelteKit 解码一次；只解析已配置的 slug，未知分类明确返回 404。
 export const load: PageLoad = ({ params }) => {
