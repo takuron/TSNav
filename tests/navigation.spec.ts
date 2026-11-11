@@ -62,7 +62,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
     await expect(page.getByRole('searchbox')).toBeVisible();
-    const token = await page.locator('md-outlined-text-field').evaluate((element) => getComputedStyle(element.shadowRoot!.querySelector('input')!).getPropertyValue('--md-sys-color-primary').trim());
+    const token = await page.getByRole('searchbox').evaluate((element) => getComputedStyle(element).getPropertyValue('--md-sys-color-primary').trim());
     expect(token).toBe(colorScheme === 'dark' ? '#c3e8ff' : '#006194');
     await page.getByRole('button', { name: '打开导航菜单' }).click();
     const drawer = page.getByRole('dialog', { name: '站点分类' });
@@ -90,6 +90,7 @@ test('语言仅切换通用界面，分类和站点保留自定义内容', async
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page).toHaveTitle('TSNav · Good places, one click away');
   await expect(page.getByRole('searchbox', { name: 'Search the web, technical keywords, or quick commands…' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Recommended', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: '设计与视觉灵感', exact: true })).toBeVisible();
   await expect(page.locator('.site-card').first()).toContainText('全球最大的开源代码托管与协作平台');
   await page.reload();
@@ -115,9 +116,174 @@ test('并发 SSR 隔离语言，未知语言回退中文', async ({ request }) =
     expect(response.ok()).toBeTruthy();
     expect(html).toContain(`lang="${locale}"`);
     expect(html).toContain(locale === 'en' ? 'Search engines' : '搜索引擎');
+    expect(html).toContain(locale === 'en' ? 'Recommended' : '常用推荐');
     expect(response.headers()['vary']).toContain('Cookie');
     expect(response.headers()['cache-control']).toBe('private, no-store');
   }
   const fallback = await request.get('/', { headers: { Cookie: 'tsnav_locale=unsupported' } });
   expect(await fallback.text()).toContain('lang="zh-CN"');
+});
+
+
+test('搜索清空按钮按内容显示，清空后保留输入焦点', async ({ page, context }) => {
+  await page.goto('/');
+  const input = page.getByRole('searchbox');
+  const clear = page.getByRole('button', { name: '清空搜索', exact: true });
+  await expect(clear).toHaveCount(0);
+  await expect(page.locator('.engine-tabs .engine-tab svg')).toHaveCount(5);
+  await expect(page.locator('.search-row')).toHaveCSS('height', '56px');
+  await input.fill('Svelte 中文');
+  await expect(clear).toBeVisible();
+  await clear.click();
+  await expect(input).toHaveValue('');
+  await expect(input).toBeFocused();
+  await expect(clear).toHaveCount(0);
+  await input.fill(' ');
+  await expect(clear).toBeVisible();
+  await input.press('Enter');
+  expect(context.pages()).toHaveLength(1);
+  await input.fill('keyword');
+  await input.press('Tab');
+  await expect(clear).toBeFocused();
+  await clear.press('Enter');
+  await expect(input).toBeFocused();
+  await expect(input).toHaveValue('');
+});
+
+test('窄搜索面板使用引擎下拉框，搜索与跨断点状态保持一致', async ({ page, context }) => {
+  await context.route(/https:\/\/(www\.)?(google\.com|baidu\.com|bing\.com|sogou\.com|duckduckgo\.com)\//, (route) => route.fulfill({ body: 'search' }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const picker = page.locator('.engine-trigger');
+  const input = page.getByRole('searchbox');
+  await expect(picker).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Google', exact: true })).toHaveCount(0);
+  const query = 'Svelte & 中文';
+  await input.fill(query);
+  for (const [name, base] of [
+    ['Google', 'https://www.google.com/search?q='],
+    ['百度', 'https://www.baidu.com/s?wd='],
+    ['Bing', 'https://www.bing.com/search?q='],
+    ['搜狗', 'https://www.sogou.com/web?query='],
+    ['DuckDuckGo', 'https://duckduckgo.com/?q=']
+  ]) {
+    await picker.click();
+    await expect(picker).toHaveAttribute('aria-expanded', 'true');
+    await page.getByRole('menuitem', { name, exact: true }).click();
+    await expect(picker).toHaveText(name);
+    await expect(picker).toHaveAttribute('aria-expanded', 'false');
+    await expect(input).toHaveValue(query);
+    const popup = page.waitForEvent('popup');
+    await input.press('Enter');
+    const result = await popup;
+    await expect(result).toHaveURL(base + encodeURIComponent(query));
+    await result.close();
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await expect(picker).not.toBeVisible();
+  await expect(page.getByRole('button', { name: 'DuckDuckGo', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.engine-tabs .engine-tab svg').first()).toHaveCSS('width', '16px');
+  await page.getByRole('button', { name: 'Bing', exact: true }).click();
+  for (const width of [900, 768, 390, 320]) {
+    await page.setViewportSize({ width, height: 844 });
+    await expect(picker).toBeVisible();
+    await expect(picker).toHaveText('Bing');
+    await expect(input).toHaveValue(query);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  }
+});
+
+
+test('移动引擎按钮保持桌面样式，菜单支持键盘与外部关闭', async ({ page }) => {
+  await page.goto('/');
+  const desktopButton = page.getByRole('button', { name: 'Google', exact: true });
+  const readStyle = (element: HTMLElement | SVGElement) => {
+    const style = getComputedStyle(element);
+    return { padding: style.padding, fontSize: style.fontSize, background: style.backgroundColor, radius: style.borderRadius, height: element.getBoundingClientRect().height };
+  };
+  const desktopStyle = await desktopButton.evaluate(readStyle);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const trigger = page.locator('.engine-trigger');
+  await expect(trigger).toBeVisible();
+  expect(await trigger.evaluate(readStyle)).toEqual(desktopStyle);
+  await expect(page.getByRole('menuitem')).toHaveCount(0);
+  await trigger.focus();
+  await trigger.press('ArrowDown');
+  await expect(page.getByRole('menuitem', { name: 'Google', exact: true })).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(page.getByRole('menuitem', { name: '百度', exact: true })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(trigger).toHaveText('百度');
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await page.keyboard.press('Escape');
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await page.getByRole('searchbox').click();
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await page.setViewportSize({ width: 320, height: 844 });
+  await trigger.click();
+  const menuItem = page.getByRole('menuitem', { name: 'DuckDuckGo', exact: true });
+  await expect(menuItem).toBeVisible();
+  const bounds = await menuItem.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(320);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await expect(trigger).not.toBeVisible();
+  await expect(page.getByRole('menuitem')).toHaveCount(0);
+});
+
+test('移动顶栏仅保留菜单入口，侧栏仍保留品牌和设置', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const header = page.locator('.mobile-header');
+  await expect(header.getByRole('button')).toHaveCount(1);
+  await expect(header.getByRole('link')).toHaveCount(0);
+  await expect(header.getByRole('img')).toHaveCount(0);
+  await header.getByRole('button', { name: '打开导航菜单' }).click();
+  const drawer = page.getByRole('dialog', { name: '站点分类' });
+  await expect(drawer.getByRole('link', { name: 'TSNav 首页' })).toBeVisible();
+  await drawer.getByRole('button', { name: '界面设置' }).click();
+  await expect(page.getByRole('dialog', { name: '界面设置' })).toBeVisible();
+});
+
+test('短内容无多余滚动，页脚贴底且搜索和卡片整体居中', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const [width, height] of [[1440, 900], [1024, 900], [390, 1200]]) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/');
+    await expect(page.getByRole('searchbox')).toBeVisible();
+    const layout = await page.evaluate(() => {
+      const main = document.querySelector('.portal-main')!.getBoundingClientRect();
+      const content = document.querySelector('.dashboard')!.getBoundingClientRect();
+      const footer = document.querySelector('.portal-footer')!.getBoundingClientRect();
+      return { scrollHeight: document.documentElement.scrollHeight, height: innerHeight, footerBottom: footer.bottom, mainCenter: (main.top + main.bottom) / 2, contentCenter: (content.top + content.bottom) / 2 };
+    });
+    expect(layout.scrollHeight).toBe(layout.height);
+    expect(layout.footerBottom).toBeCloseTo(layout.height, 0);
+    expect(layout.contentCenter).toBeCloseTo(layout.mainCenter, 0);
+  }
+});
+
+test('长内容正常滚动，页脚位于最后且完整可达', async ({ page }) => {
+  for (const [width, height] of [[1440, 400], [390, 600], [320, 600]]) {
+    await page.setViewportSize({ width, height });
+    await page.goto('/');
+    await expect(page.getByRole('searchbox')).toBeVisible();
+    // 同一路由重新导航会恢复上一轮滚动位置，测量前显式回到文档顶部。
+    await page.evaluate(() => window.scrollTo(0, 0));
+    const layout = await page.evaluate(() => {
+      const content = document.querySelector('.dashboard')!.getBoundingClientRect();
+      const footer = document.querySelector('.portal-footer')!.getBoundingClientRect();
+      return { contentTop: content.top, contentBottom: content.bottom, footerTop: footer.top, footerBottom: footer.bottom, scrollHeight: document.documentElement.scrollHeight, height: innerHeight };
+    });
+    expect(layout.scrollHeight).toBeGreaterThan(layout.height);
+    expect(layout.contentTop).toBeGreaterThanOrEqual(0);
+    expect(layout.footerTop).toBeGreaterThanOrEqual(layout.contentBottom);
+    expect(layout.footerBottom).toBeCloseTo(layout.scrollHeight, 0);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect(page.getByRole('button', { name: '反馈死链', exact: true })).toBeInViewport();
+  }
 });

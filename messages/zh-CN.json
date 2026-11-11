@@ -49,5 +49,9 @@
   "feedback_site": "选择站点",
   "dialog_close": "关闭",
   "engine_baidu": "百度",
-  "engine_sogou": "搜狗"
+  "engine_sogou": "搜狗",
+  "nav_recommended": "常用推荐",
+  "search_clear": "清空搜索",
+  "search_placeholder": "搜索互联网",
+  "search_engine_choose": "选择搜索引擎，当前为 {name}"
 }

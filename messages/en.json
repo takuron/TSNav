@@ -49,5 +49,9 @@
   "feedback_site": "Select a site",
   "dialog_close": "Close",
   "engine_baidu": "Baidu",
-  "engine_sogou": "Sogou"
+  "engine_sogou": "Sogou",
+  "nav_recommended": "Recommended",
+  "search_clear": "Clear search",
+  "search_placeholder": "Search the web",
+  "search_engine_choose": "Choose search engine, currently {name}"
 }

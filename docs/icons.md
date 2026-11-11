@@ -23,3 +23,11 @@
 
 - [Google Material Symbols](https://github.com/google/material-design-icons)：Apache-2.0，许可见 licenses/material-symbols.md。
 - [Simple Icons](https://github.com/simple-icons/simple-icons)：CC0-1.0，许可见 licenses/simple-icons.md；品牌商标及单个品牌使用规范仍需遵守。
+
+## 搜索引擎图标
+
+`SearchBar.svelte` 统一使用 Simple Icons 的 `google`、`baidu`、`microsoftbing`、`sogou`、`duckduckgo` 品牌 SVG，替换早期字母和通用搜索图形。它们由现有锁定依赖静态导入注册表，通过 `Icon.svelte` 以 16px 渲染并继承主题颜色，不请求远程 favicon。
+
+来源：[Simple Icons](https://github.com/simple-icons/simple-icons)，通过当前 `@iconify-icons/simple-icons` 包获取；许可沿用 `licenses/simple-icons.md`。
+
+引擎菜单选中项使用注册表中的 Material Symbols Rounded `check` 图标；按钮与菜单中的品牌 SVG 保持 16px。
