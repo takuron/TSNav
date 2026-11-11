@@ -21,6 +21,7 @@ src/
   hooks.client.ts              水合前加载 Material 注册
   hooks.server.ts              i18n 请求上下文、文档语言、响应缓存
   lib/
+    components/PortalShell.svelte 主页与分类页共享外壳、设置及折叠状态
     components/Sidebar.svelte  固定推荐入口、可定制分类和响应式侧栏
     components/Footer.svelte   页脚、反馈弹窗和返回顶部
     components/NavigationCard.svelte 单张站点卡片
@@ -28,12 +29,15 @@ src/
     components/LanguageSwitcher.svelte 语言入口
     types/navigation.ts        分类与站点组件的共享类型
     paraglide/                 自动生成的 i18n API（忽略提交）
+    data/categories.ts        分类注册表、递归分组及路由解析
     data/sites.ts              保留的早期示例数据（当前主页不引用）
     material/register.ts       仅浏览器执行的按需组件注册
     material/elements.d.ts     Svelte 自定义元素属性和事件类型
   routes/
     +layout.svelte             全局 CSS 和子页面渲染
-    +page.svelte               可定制静态内容、分类和访问状态、组件组合
+    +page.svelte               主页站点、本地分类筛选与访问状态
+    category/[slug]/+page.ts   解析动态分类标识，不存在返回 404
+    category/[slug]/+page.svelte 递归分类目录与分层卡片
 messages/                      中文与英文翻译源
 project.inlang/                语言、格式插件与共享编译配置
 scripts/check-messages.mjs     翻译资源一致性检查
@@ -45,9 +49,9 @@ tests/                        生产预览浏览器集成测试
 
 ## 状态与数据
 
-主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。分类和站点数组按本次原型要求直接保存在 `+page.svelte`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
+主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
 
-`selected`、`collapsed` 和 `visited` 由页面持有，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。设置对话框提供语言切换。
+`selected` 和 `visited` 由主页持有，`collapsed` 与设置弹窗由 `PortalShell` 持有，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。设置对话框提供语言切换。
 
 站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。仅语言偏好通过 tsnav_locale Cookie 持久化。
 
@@ -70,10 +74,11 @@ tests/                        生产预览浏览器集成测试
 ## 主页组件接口
 
 - `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 false）和 `onselect` / `ontoggle` / `onsettings` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定 i18n 推荐入口。
-- `NavigationCard`：接收 `NavigationSite` 和可选 `onvisit(id)`，直接输出 SSR 外链；不拦截原生链接行为。
+- `NavigationCard`：接收 `NavigationSite`、可选 `onvisit(id)`、`variant`（默认 shortcut）和 `headingLevel`（默认 2）。directory 变体提供两行描述、常驻外链图形与目录标题层级；直接输出 SSR 外链，不拦截原生行为。
 - `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
 - `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。
-- `types/navigation.ts`：导出 `NavigationCategory` 和 `NavigationSite`，只描述内容结构，不保存业务数据。
+- `types/navigation.ts`：导出 `NavigationCategory`、`NavigationSite`、递归 `CategorySection` 和 `CategoryPage`，只描述内容结构，不保存业务数据。
+- `PortalShell`：接收 `categories`、`selected`、`onselect`、`sites`、内容 snippet 与 `variant`（home / directory），统一渲染侧栏、页脚、移动抽屉及设置。
 
 组件样式仍统一维护在 `src/app.css`，共用 Material 系统语义令牌；没有新增 UI 框架或运行时图标请求。
 
@@ -84,3 +89,21 @@ tests/                        生产预览浏览器集成测试
 ## 移动抽屉动画
 
 移动抽屉继续使用原生 dialog 提供模态、Escape 关闭和焦点恢复。dialog 作为透明的全屏外壳，内部 `.drawer-panel` 承载侧栏内容与个人区域，遮罩关闭按钮为独立的全屏点击区域。每次出现 `[open]` 时面板执行 260ms 从左侧滑入动画，原生 `::backdrop` 同步渐显；面板动画不会移动遮罩点击区域。所有关闭入口统一调用 `closeDrawer()`，先从面板当前位置执行 200ms 滑出与遮罩淡出，通过动画 finished Promise 等待完成后才执行原生 `close()`；分类切换和设置弹窗在抽屉退出后执行。Escape 的原生 cancel 被拦截以走同一流程，重复关闭请求被忽略。`prefers-reduced-motion: reduce` 下禁用面板及遮罩动画。
+
+## 动态分类路由与可定制名称
+
+分类页使用 `/category/[slug]`，当前示例为 `/category/development`。页面复现 `design/child` 的多级分组、桌面四列卡片、两行说明及缩进；小于 1200px 使用两列，小于 600px 使用单列并取消分组缩进。目录页从顶部排列，主页仍整体居中。
+
+分类配置分开存储 `id`（稳定标识 dev）、`label`（侧栏显示名）、`title`（页标题）与 `slug`（URL 标识 development）。改显示名不会改变 URL 或选中状态，slug 支持中文与空格并在生成链接时由 `encodeURIComponent` 编码。每个配置应有唯一的 id 和 slug；slug 是单个路径段，而非任意 URL。
+
+`data/categories.ts` 的导出 API：
+
+- `categoryPages`：静态原型配置，包含递归 children / sites。新增分类只需配置数据，通用页面没有 development 分支。
+- `findCategoryBySlug(slug, pages = categoryPages)`：按已解码 slug 精确查找；不以显示名称猜测、不回退为默认分类。可注入后续用户配置数据源。
+- `categoryPath(id, pages = categoryPages)`：按稳定 ID 生成编码后的分类路由；未配置独立页返回 undefined。
+- `navigationCategories`：固定推荐入口之外的侧栏静态内容；注册的分类页自动生成真实 href，其他入口保留本地筛选。
+- `collectCategorySites(sections)`：递归收集站点，供共享页脚反馈选择使用。
+
+`category/[slug]/+page.ts` 在 SSR / 客户端导航时使用同一解析规则，未知 slug 返回 HTTP 404。不要再次手动解码路由参数，也不把显示名称硬编码成路由分支。以后接入用户配置时，替换分类数据来源并在写入配置时检查标识唯一性即可。
+
+已注册分类在侧栏使用真实链接，保留修饰键新标签行为；普通点击等待移动抽屉退场后通过页面回调导航。分类页返回常用推荐使用 `/`，返回未注册独立页的分类使用 `/?category=<稳定 ID>`，由主页初始化对应本地筛选。

@@ -25,9 +25,11 @@ pnpm build
 pnpm test:e2e
 ```
 
-已接入 Paraglide JS，中英文可在页头切换，默认中文并保存语言偏好。文案开发见 [国际化说明](docs/i18n.md)。
+已接入 Paraglide JS，中英文可在侧栏设置中切换，默认中文并保存语言偏好。文案开发见 [国际化说明](docs/i18n.md)。
 
-当前包含 6 个示例站点、搜索、分类筛选、响应式布局和跟随系统的浅深主题。更改站点数据请编辑 `src/lib/data/sites.ts`。
+当前主页包含 8 个快捷站点、五引擎搜索、分类筛选、响应式布局和系统浅深主题。主页站点编辑 `src/routes/+page.svelte`。
+
+子分类原型位于 `/category/development`，也可从侧栏“开发与云原生”打开。分类配置及 16 个示例站点编辑 `src/lib/data/categories.ts`；动态路由为 `/category/[slug]`，显示名称与 URL 标识独立，便于后续自定义分类。
 
 ## 部署
 

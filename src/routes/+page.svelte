@@ -2,20 +2,15 @@
   // 还原主页原型；分类与站点为可替换的静态内容，交互状态仅保留在页面内。
   import { m } from '#lib/paraglide/messages.js';
   import Icon from '#lib/components/Icon.svelte';
-  import LanguageSwitcher from '#lib/components/LanguageSwitcher.svelte';
-  import Sidebar from '#lib/components/Sidebar.svelte';
-  import Footer from '#lib/components/Footer.svelte';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import PortalShell from '#lib/components/PortalShell.svelte';
+  import { navigationCategories, categoryPath } from '#lib/data/categories.ts';
   import NavigationCard from '#lib/components/NavigationCard.svelte';
   import SearchBar from '#lib/components/SearchBar.svelte';
-  import type { NavigationCategory, NavigationSite } from '#lib/types/navigation.ts';
+  import type { NavigationSite } from '#lib/types/navigation.ts';
 
-  const destinations: NavigationCategory[] = [
-    { id: 'discover', label: '发现库与分类', icon: 'gridView' },
-    { id: 'ai', label: '人工智能与前沿', icon: 'sparkles' },
-    { id: 'dev', label: '开发与云原生', icon: 'terminal' },
-    { id: 'design', label: '设计与视觉灵感', icon: 'palette' },
-    { id: 'recent', label: '历史与最近访问', icon: 'history' }
-  ];
+  const destinations = navigationCategories;
   const shortcuts: NavigationSite[] = [
     { id: 'github', name: 'GitHub', description: '全球最大的开源代码托管与协作平台', url: 'https://github.com', category: 'dev', icon: 'github', tone: 'neutral' },
     { id: 'claude', name: 'Claude / ChatGPT', description: '前沿对话大模型协同与推理引擎', url: 'https://claude.ai', category: 'ai', icon: 'psychology', tone: 'blue' },
@@ -26,9 +21,12 @@
     { id: 'stackoverflow', name: 'Stack Overflow', description: '全球最大的专业软件开发疑难解答社区', url: 'https://stackoverflow.com', category: 'dev', icon: 'quiz', tone: 'primary' },
     { id: 'dribbble', name: 'Dribbble & Behance', description: '全球顶尖数字产品 UI 与插画艺术灵感', url: 'https://dribbble.com', category: 'design', icon: 'palette', tone: 'primary' }
   ];
-  let selected = $state('recommended');
-  let collapsed = $state(false);
-  let settings: HTMLDialogElement;
+  // 从分类页返回本地筛选时，使用稳定 ID 初始化，不以显示名判定。
+  function initialCategory() {
+    const id = page.url.searchParams.get('category');
+    return destinations.some((category) => category.id === id && !category.href) ? id! : 'recommended';
+  }
+  let selected = $state(initialCategory());
   let visited = $state<string[]>([]);
   const selectedLabel = $derived(selected === 'recommended' ? m.nav_recommended() : destinations.find((item) => item.id === selected)?.label);
   const visibleSites = $derived(selected === 'recent'
@@ -36,7 +34,9 @@
     : shortcuts.filter((site) => ['recommended', 'discover'].includes(selected) || site.category === selected));
 
   function selectCategory(id: string) {
-    selected = id;
+    const path = categoryPath(id);
+    if (path) void goto(path);
+    else selected = id;
   }
   function visit(id: string) {
     visited = [id, ...visited.filter((item) => item !== id)];
@@ -48,11 +48,7 @@
   <meta name="description" content={m.page_description()} />
 </svelte:head>
 
-<a class="skip-link" href="#content">{m.skip_content()}</a>
-<div class="portal" class:collapsed>
-  <Sidebar categories={destinations} {selected} {collapsed} onselect={selectCategory} ontoggle={() => { collapsed = !collapsed; }} onsettings={() => settings.showModal()} />
-  <div class="main-wrapper">
-    <main id="content" class="portal-main">
+<PortalShell categories={destinations} {selected} onselect={selectCategory} sites={shortcuts}>
       <h1 class="sr-only">{m.sites_title()}</h1>
       <div class="dashboard">
         <SearchBar />
@@ -66,12 +62,4 @@
           {#if visibleSites.length === 0}<div class="empty-state"><Icon name="history" size={36} /><h2>{m.recent_empty()}</h2><p>{m.recent_hint()}</p><!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (Material 内部原生按钮提供键盘行为) --><md-filled-button onclick={() => selectCategory('recommended')}>{m.reset_filters()}</md-filled-button></div>{/if}
         </section>
       </div>
-    </main>
-    <Footer sites={shortcuts} />
-  </div>
-</div>
-
-<dialog class="utility-dialog" bind:this={settings} aria-labelledby="settings-title">
-  <div class="dialog-heading"><h2 id="settings-title">{m.settings_label()}</h2><button class="icon-button" type="button" aria-label={m.dialog_close()} onclick={() => settings.close()}><Icon name="close" size={20} /></button></div>
-  <p>{m.language_label()}</p><LanguageSwitcher />
-</dialog>
+</PortalShell>

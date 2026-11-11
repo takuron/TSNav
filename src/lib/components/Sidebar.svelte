@@ -58,10 +58,19 @@
 {/snippet}
 {#snippet navigation()}
   <nav class="destination-list" aria-label={m.category_label()}>
-    {#each [{ id: 'recommended', label: m.nav_recommended(), icon: 'star' as const }, ...categories] as item}
+    {#each [{ id: 'recommended', label: m.nav_recommended(), icon: 'star' as const, href: undefined }, ...categories] as item}
+      {#if item.href}
+        <a class="destination" href={item.href} aria-current={selected === item.id ? 'page' : undefined} title={item.label} onclick={(event) => {
+          if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+            event.preventDefault();
+            selectCategory(item.id);
+          }
+        }}><Icon name={item.icon} size={20} /><span class="sidebar-text">{item.label}</span></a>
+      {:else}
       <button type="button" class="destination" aria-pressed={selected === item.id} title={item.label} onclick={() => selectCategory(item.id)}>
         <Icon name={item.icon} size={20} /><span class="sidebar-text">{item.label}</span>
       </button>
+      {/if}
     {/each}
   </nav>
 {/snippet}

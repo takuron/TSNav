@@ -1,3 +1,20 @@
+import devices from '@iconify-icons/material-symbols/devices-rounded';
+import dns from '@iconify-icons/material-symbols/dns-rounded';
+import hub from '@iconify-icons/material-symbols/hub-rounded';
+import code from '@iconify-icons/material-symbols/code-rounded';
+import codeBlocks from '@iconify-icons/material-symbols/code-blocks-rounded';
+import viewQuilt from '@iconify-icons/material-symbols/view-quilt-rounded';
+import bolt from '@iconify-icons/material-symbols/bolt-rounded';
+import cycle from '@iconify-icons/material-symbols/cycle-rounded';
+import spa from '@iconify-icons/material-symbols/spa-rounded';
+import speed from '@iconify-icons/material-symbols/speed-rounded';
+import hexagon from '@iconify-icons/material-symbols/hexagon-rounded';
+import anchor from '@iconify-icons/material-symbols/anchor-rounded';
+import deployedCode from '@iconify-icons/material-symbols/deployed-code-rounded';
+import accountTree from '@iconify-icons/material-symbols/account-tree-rounded';
+import sourceNotes from '@iconify-icons/material-symbols/source-notes-rounded';
+import bugReport from '@iconify-icons/material-symbols/bug-report-rounded';
+import api from '@iconify-icons/material-symbols/api-rounded';
 import check from '@iconify-icons/material-symbols/check-rounded';
 import baidu from '@iconify-icons/simple-icons/baidu';
 import microsoftbing from '@iconify-icons/simple-icons/microsoftbing';
@@ -42,7 +59,7 @@ import wikipedia from '@iconify-icons/simple-icons/wikipedia';
 import stackoverflow from '@iconify-icons/simple-icons/stackoverflow';
 
 /** Google Material Symbols Rounded：仅静态导入项目需要的官方图形。 */
-export const materialIcons = { check, search, openInNew, menu, close, home, settings, lightMode, darkMode, language, favorite, folder, link, star, gridView, sparkles, terminal, palette, history, collapse, psychology, note, video, quiz, arrowUp, feedback, explore };
+export const materialIcons = { devices, dns, hub, code, codeBlocks, viewQuilt, bolt, cycle, spa, speed, hexagon, anchor, deployedCode, accountTree, sourceNotes, bugReport, api, check, search, openInNew, menu, close, home, settings, lightMode, darkMode, language, favorite, folder, link, star, gridView, sparkles, terminal, palette, history, collapse, psychology, note, video, quiz, arrowUp, feedback, explore };
 
 /** Simple Icons 品牌图形，统一单色并继承主题颜色。 */
 export const brandIcons = { github, svelte, cloudflare, materialdesign, figma, mdnwebdocs, google, youtube, wikipedia, stackoverflow, vercel, baidu, microsoftbing, sogou, duckduckgo };

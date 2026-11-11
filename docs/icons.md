@@ -31,3 +31,5 @@
 来源：[Simple Icons](https://github.com/simple-icons/simple-icons)，通过当前 `@iconify-icons/simple-icons` 包获取；许可沿用 `licenses/simple-icons.md`。
 
 引擎菜单选中项使用注册表中的 Material Symbols Rounded `check` 图标；按钮与菜单中的品牌 SVG 保持 16px。
+
+分类目录按 design/child 原型补充 devices、dns、hub、code、codeBlocks、viewQuilt、bolt、cycle、spa、speed、hexagon、anchor、deployedCode、accountTree、sourceNotes、bugReport、api 等 Material Symbols Rounded 图标；仍通过有限静态注册表与 Icon.svelte 渲染，不使用在线字体或外部 SVG。
