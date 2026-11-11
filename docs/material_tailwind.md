@@ -25,7 +25,7 @@ pnpm exec playwright install chromium # 首次
 pnpm test:e2e
 ```
 
-自动化覆盖 SSR 链接输出、Material Shadow DOM 输入、搜索和分类组合、空结果重置、浅深主题令牌继承、390px 宽视口溢出以及交互过程中的浏览器异常。测试不等于全浏览器兼容证明；上线前仍需目标浏览器实际检查。
+当前主页自动化覆盖八张卡片的 SSR 链接输出、Material Shadow DOM 输入与五引擎搜索、侧栏分类和折叠、最近访问空状态恢复、浅深主题令牌继承、320–1440px 视口溢出、移动抽屉及交互过程中的浏览器异常。测试不等于全浏览器兼容证明；上线前仍需目标浏览器实际检查。
 
 ## 上游说明
 
@@ -53,3 +53,11 @@ pnpm test:e2e
 ## 默认主题配色来源
 
 亮色取自 `design/main/DESIGN.md`、暗色取自 `design/child-dark/DESIGN.md` 的完整 `colors` 色表。正文示例有不同取值，统一优先结构化色表。亮色 primary 为 `#006194`、surface 为 `#f7f9fb`；暗色 primary 为 `#c3e8ff`、surface 为 `#101418`。所有色表角色（包括 fixed、surface-tint、background）均映射到 Material 系统变量和 Tailwind 语义颜色，继续跟随系统主题；shadow / scrim 保持黑色。仅配置全局颜色，不实现原型布局、字体或组件样式。
+
+## 主页原型验证（2026-11-11）
+
+- `pnpm check`：0 错误、0 警告。
+- `pnpm build`：成功生成 Cloudflare Pages 产物。
+- `pnpm test:e2e`：Chromium 下 7 项测试全部通过。
+- 搜索框圆角使用 28px；Material 会用 shape 令牌计算内部留白，不能用 999px 模拟胶囊，否则会挤掉输入区。
+- 未部署到 Cloudflare。

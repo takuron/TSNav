@@ -6,7 +6,7 @@
 
 - 注册表：`src/lib/icons/index.ts`，导出 materialIcons、brandIcons、icons 与 IconName。
 - 渲染组件：`src/lib/components/Icon.svelte`，参数 name（类型化名称）、size（默认24）、label（可选本地化无障碍名称）、class。
-- 已内置12个界面图标，以及 GitHub、Svelte、Cloudflare、Material Design、Figma、MDN、Google、YouTube、Wikipedia、Stack Overflow 品牌图标。当前六个示例站点已使用真实品牌 SVG。
+- 静态内置搜索、侧栏分类、折叠、历史、反馈与返回顶部等 Material Symbols Rounded 图标，以及 GitHub、Svelte、Cloudflare、Material Design、Figma、MDN、Google、YouTube、Wikipedia、Stack Overflow、Vercel 品牌图标。主页卡片混合使用品牌图形与原型中的语义图形。
 
 ```svelte
 <Icon name="search" />

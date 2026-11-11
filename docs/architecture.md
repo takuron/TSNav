@@ -23,12 +23,12 @@ src/
   lib/
     components/LanguageSwitcher.svelte 语言入口
     paraglide/                 自动生成的 i18n API（忽略提交）
-    data/sites.ts              稳定分类 ID、描述消息函数与示例数据
+    data/sites.ts              保留的早期示例数据（当前主页不引用）
     material/register.ts       仅浏览器执行的按需组件注册
     material/elements.d.ts     Svelte 自定义元素属性和事件类型
   routes/
     +layout.svelte             全局 CSS 和子页面渲染
-    +page.svelte               搜索、分类、导航展示
+    +page.svelte               主页静态内容、引擎搜索、分类、侧栏和本地交互
 messages/                      中文与英文翻译源
 project.inlang/                语言、格式插件与共享编译配置
 scripts/check-messages.mjs     翻译资源一致性检查
@@ -40,9 +40,11 @@ tests/                        生产预览浏览器集成测试
 
 ## 状态与数据
 
-`query` 和 `category` 是页面局部 `$state`；`filtered` 是 `$derived`。输入事件通过类型化 `event.currentTarget.value` 读取 Material 元素的公开 value。重置操作同时恢复查询和分类。
+主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。分类和站点数组按本次原型要求直接保存在 `+page.svelte`，使用稳定 ID；它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
 
-站点链接采用静态可信 HTTPS 数据。当前没有远程 API、数据库和账户系统；语言偏好通过 tsnav_locale Cookie 持久化。没有跨请求可变全局用户状态。
+`query`、`engine`、`selected`、`collapsed` 和 `visited` 为页面局部 `$state`，卡片集合通过 `$derived` 派生。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。设置对话框提供语言切换。
+
+站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。仅语言偏好通过 tsnav_locale Cookie 持久化。
 
 ## 部署边界
 
@@ -54,7 +56,7 @@ tests/                        生产预览浏览器集成测试
 
 ## 国际化边界
 
-服务端 handle 通过 Paraglide 中间件隔离请求语言，并填充 HTML 的 lang/dir；Pages 启用 nodejs_compat。页面通过编译消息函数获取文案，站点描述与分类标签保存函数引用，渲染时解析。默认中文，Cookie 可选择英文；不改变现有路由。HTML 禁用共享缓存。生成产物不纳入版本控制，check / build 负责生成与校验。
+服务端 handle 通过 Paraglide 中间件隔离请求语言，并填充 HTML 的 lang/dir；Pages 启用 nodejs_compat。搜索、页脚、设置、反馈、空状态和无障碍提示通过编译消息函数获取文案；当前原型的侧栏分类、站点名称与描述硬编码，不随界面语言变化。默认中文，Cookie 可选择英文；不改变现有路由。HTML 禁用共享缓存。生成产物不纳入版本控制，check / build 负责生成与校验。
 
 ## SVG 图标
 
