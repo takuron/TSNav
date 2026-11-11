@@ -269,9 +269,16 @@
   .empty-state h2 { font-size: 20px; margin: 12px 0; }
   .empty-state p { margin-bottom: 24px; }
   .noscript-hint { padding: 12px; font-size: 14px; }
-  .mobile-drawer { box-sizing: border-box; position: fixed; inset: 0 auto 0 0; margin: 0; width: min(280px, 85vw); height: 100dvh; max-height: 100dvh; padding: 12px; border: 0; background: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface); overflow: visible; }
+  /* dialog 管理模态与焦点，只有面板移动，外部点击区域始终覆盖整个视口。 */
+  .mobile-drawer { box-sizing: border-box; position: fixed; inset: 0; margin: 0; width: 100vw; max-width: none; height: 100dvh; max-height: 100dvh; padding: 0; border: 0; background: transparent; color: var(--md-sys-color-on-surface); overflow: hidden; }
+  .drawer-panel { box-sizing: border-box; position: relative; z-index: 1; width: min(280px, 85vw); height: 100%; padding: 12px; background: var(--md-sys-color-surface-container-low); }
+  .mobile-drawer[open] .drawer-panel { animation: drawer-panel-enter 260ms cubic-bezier(0.2, 0, 0, 1); }
+  .mobile-drawer[open]::backdrop { animation: drawer-scrim-enter 260ms ease-out; }
+  .mobile-drawer[open].closing .drawer-panel { animation: drawer-panel-exit 200ms cubic-bezier(0.4, 0, 1, 1) forwards; }
+  .mobile-drawer[open].closing::backdrop { animation: drawer-scrim-exit 200ms ease-in forwards; }
   .drawer-profile { position: absolute; bottom: 20px; left: 12px; right: 12px; }
-  .drawer-backdrop { position: fixed; inset: 0 0 0 min(280px, 85vw); background: transparent; border: 0; }
+  .drawer-backdrop { position: absolute; inset: 0; background: transparent; border: 0; }
+
 }
 @media (min-width: 768px) and (max-width: 1199px) {
   .shortcut-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -298,4 +305,25 @@
 @container search-panel (max-width: 600px) {
   .engine-tabs { display: none; }
   .engine-picker { display: flex; }
+}
+
+@keyframes drawer-panel-enter {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes drawer-scrim-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes drawer-panel-exit {
+  from { transform: var(--drawer-exit-transform, translateX(0)); }
+  to { transform: translateX(-100%); }
+}
+@keyframes drawer-scrim-exit {
+  from { opacity: var(--drawer-exit-opacity, 1); }
+  to { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-drawer[open] .drawer-panel, .mobile-drawer[open]::backdrop,
+  .mobile-drawer[open].closing .drawer-panel, .mobile-drawer[open].closing::backdrop { animation: none; }
 }

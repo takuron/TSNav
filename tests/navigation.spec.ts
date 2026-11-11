@@ -287,3 +287,100 @@ test('长内容正常滚动，页脚位于最后且完整可达', async ({ page 
     await expect(page.getByRole('button', { name: '反馈死链', exact: true })).toBeInViewport();
   }
 });
+
+test('移动抽屉每次展开均滑入，遮罩固定且关闭后恢复焦点', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const trigger = page.getByRole('button', { name: '打开导航菜单' });
+  const drawer = page.getByRole('dialog', { name: '站点分类' });
+  for (const closeWith of ['escape', 'backdrop', 'category']) {
+    await trigger.focus();
+    const motion = await trigger.evaluate((button) => {
+      if (!(button instanceof HTMLButtonElement)) throw new Error('抽屉入口必须是按钮');
+      button.click();
+      const dialog = document.querySelector<HTMLDialogElement>('.mobile-drawer')!;
+      const panel = dialog.querySelector<HTMLElement>('.drawer-panel')!;
+      const animation = panel.getAnimations().find((item) => item instanceof CSSAnimation && item.animationName === 'drawer-panel-enter');
+      if (!animation) throw new Error('抽屉展开动画未启动');
+      animation.pause();
+      animation.currentTime = 0;
+      const start = panel.getBoundingClientRect().left;
+      animation.currentTime = 100;
+      const middle = panel.getBoundingClientRect().left;
+      const backdrop = dialog.querySelector('.drawer-backdrop')!.getBoundingClientRect();
+      animation.finish();
+      return { start, middle, end: panel.getBoundingClientRect().left, width: panel.getBoundingClientRect().width, backdropLeft: backdrop.left, backdropRight: backdrop.right, viewport: innerWidth, scrimAnimation: getComputedStyle(dialog, '::backdrop').animationName };
+    });
+    expect(motion.start).toBeCloseTo(-motion.width, 0);
+    expect(motion.middle).toBeGreaterThan(motion.start);
+    expect(motion.middle).toBeLessThan(0);
+    expect(motion.end).toBe(0);
+    expect(motion.backdropLeft).toBe(0);
+    expect(motion.backdropRight).toBe(motion.viewport);
+    expect(motion.scrimAnimation).toBe('drawer-scrim-enter');
+    if (closeWith === 'escape') await page.keyboard.press('Escape');
+    if (closeWith === 'backdrop') await page.locator('.drawer-backdrop').click({ position: { x: 350, y: 100 } });
+    if (closeWith === 'category') await drawer.getByRole('button', { name: '设计与视觉灵感' }).click();
+    await expect(drawer).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+  }
+});
+
+test('减少动态效果时抽屉与遮罩直接显示', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.getByRole('button', { name: '打开导航菜单' }).click();
+  await expect(page.locator('.drawer-panel')).toHaveCSS('animation-name', 'none');
+  expect(await page.locator('.mobile-drawer').evaluate((element) => getComputedStyle(element, '::backdrop').animationName)).toBe('none');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: '站点分类' })).not.toBeVisible();
+});
+
+test('所有移动抽屉关闭入口等待滑出和遮罩淡出，设置弹窗随后打开', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const action of ['button', 'backdrop', 'escape', 'category', 'settings']) {
+    await page.goto('/');
+    await page.getByRole('button', { name: '打开导航菜单' }).click();
+    const drawer = page.locator('.mobile-drawer');
+    await page.locator('.drawer-panel').evaluate(async (element) => {
+      await Promise.allSettled(element.getAnimations().map((animation) => animation.finished));
+    });
+    const motion = await drawer.evaluate(async (element, action) => {
+      if (!(element instanceof HTMLDialogElement)) throw new Error('抽屉必须为 dialog');
+      if (action === 'escape') element.dispatchEvent(new Event('cancel', { cancelable: true }));
+      else {
+        const selector = action === 'button' ? '.sidebar-heading button' : action === 'backdrop' ? '.drawer-backdrop' : action === 'settings' ? '.settings-button' : '.destination';
+        element.querySelector<HTMLButtonElement>(selector)!.click();
+      }
+      await new Promise(requestAnimationFrame);
+      const panel = element.querySelector<HTMLElement>('.drawer-panel')!;
+      const animations = element.getAnimations({ subtree: true });
+      const exit = animations.find((animation) => animation instanceof CSSAnimation && animation.animationName === 'drawer-panel-exit');
+      if (!exit) throw new Error('抽屉收回动画未启动');
+      exit.pause();
+      exit.currentTime = 0;
+      const start = panel.getBoundingClientRect().left;
+      exit.currentTime = 100;
+      const middle = panel.getBoundingClientRect().left;
+      const stillOpen = element.open;
+      const settingsOpen = document.querySelector<HTMLDialogElement>('#settings-title')?.closest('dialog')?.open ?? false;
+      exit.currentTime = 200;
+      const end = panel.getBoundingClientRect().left;
+      const scrim = getComputedStyle(element, '::backdrop').animationName;
+      animations.forEach((animation) => animation.finish());
+      return { start, middle, end, width: panel.getBoundingClientRect().width, stillOpen, settingsOpen, scrim };
+    }, action);
+    expect(motion.start).toBeCloseTo(0, 0);
+    expect(motion.middle).toBeLessThan(motion.start);
+    expect(motion.end).toBeCloseTo(-motion.width, 0);
+    expect(motion.stillOpen).toBe(true);
+    expect(motion.settingsOpen).toBe(false);
+    expect(motion.scrim).toBe('drawer-scrim-exit');
+    await expect(drawer).not.toBeVisible();
+    if (action === 'settings') await expect(page.getByRole('dialog', { name: '界面设置' })).toBeVisible();
+    else await expect(page.getByRole('button', { name: '打开导航菜单' })).toBeFocused();
+  }
+});
