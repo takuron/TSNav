@@ -1,93 +1,110 @@
-# 变更日志
+# TSNav 架构
 
-## 0.1.0 · 2026-11-10
+## 技术选型
 
-- 初始化 SvelteKit、Svelte 5、TypeScript 和 pnpm 工程。
-- 接入 Cloudflare Pages、Tailwind v4 和官方 Material Web。
-- 通过省略 Preflight、共享语义令牌和客户端注册划分样式与 SSR 边界。
-- 提供站点搜索、分类、响应式首页和系统浅深主题。
-- 将旧浏览器扩展指南改写为 TSNav 开发规范，增加构建、架构和兼容文档。
+- SvelteKit 3 + Svelte 5：文件路由、SSR、客户端水合和响应式状态。
+- TypeScript：严格类型与自定义元素属性、事件类型。
+- `@sveltejs/adapter-cloudflare`：产出 Pages Worker 和静态资源。
+- Tailwind CSS v4 + Vite 插件：CSS-first 配置，无 v3 的 tailwind.config.js / PostCSS 初始化步骤。
+- `@material/web`：官方 Material 3 控件，通过 Lit / Shadow DOM 封装内部样式。
+- Playwright：对真实浏览器中的组件升级、事件、令牌继承和移动布局做回归检查。
+- Paraglide JS 3：编译期类型化消息、中英文基础能力和按请求隔离的 SSR 语言上下文。详见 [国际化架构](i18n.md)。
+- pnpm：唯一包管理器，锁文件固定完整依赖图。
 
-## 2026-11-10 · 默认主题更新
+## 目录边界
 
-- 按两份原型 DESIGN.md 的结构化色表设置 Azure 亮暗默认主题，补齐 Material 与 Tailwind 语义颜色角色，未实现原型页面。
+```text
+src/
+  app.html                     HTML 壳、语言、元数据
+  app.css                      Material 令牌、Tailwind 入口、最小基础样式
+  app.d.ts                     SvelteKit App 类型扩展入口
+  hooks.client.ts              水合前加载 Material 注册
+  hooks.server.ts              i18n 请求上下文、文档语言、响应缓存
+  lib/
+    components/PortalShell.svelte 主页与分类页共享外壳、设置及折叠状态
+    components/Sidebar.svelte  固定推荐入口、可定制分类和响应式侧栏
+    components/Footer.svelte   页脚、反馈弹窗和返回顶部
+    components/NavigationCard.svelte 单张站点卡片
+    components/SearchBar.svelte 五引擎搜索、输入与清空
+    components/LanguageSwitcher.svelte 语言入口
+    types/navigation.ts        分类与站点组件的共享类型
+    paraglide/                 自动生成的 i18n API（忽略提交）
+    data/categories.ts        分类注册表、递归分组及路由解析
+    data/sites.ts              保留的早期示例数据（当前主页不引用）
+    material/register.ts       仅浏览器执行的按需组件注册
+    material/elements.d.ts     Svelte 自定义元素属性和事件类型
+  routes/
+    +layout.svelte             全局 CSS 和子页面渲染
+    +page.svelte               主页站点、本地分类筛选与访问状态
+    category/[slug]/+page.ts   解析动态分类标识，不存在返回 404
+    category/[slug]/+page.svelte 递归分类目录与分层卡片
+messages/                      中文与英文翻译源
+project.inlang/                语言、格式插件与共享编译配置
+scripts/check-messages.mjs     翻译资源一致性检查
+static/                        不经过打包的公共资源
+tests/                        生产预览浏览器集成测试
+```
 
-## 2026-11-10 · 国际化基础
+首页 SSR 输出所有静态链接。客户端在水合前注册所需 Web Components。Svelte 管理查询和分类；搜索采用带原生 input 的 M3 Search 表单，Material Web 保留空状态和反馈按钮。没有必要将整页改成 CSR。
 
-- 接入 Paraglide JS 3，中英文翻译资源覆盖现有页面与无障碍文案，新增语言切换入口。
-- 默认中文、Cookie 保存偏好，服务端按请求隔离语言，并输出正确的 HTML lang / dir。
-- 为 Cloudflare Pages 启用 nodejs_compat，并为多语言 HTML 设置缓存边界。
-- 增加资源一致性检查、生成流程和国际化开发规范，以及语言切换、回退和并发 SSR 回归测试。
+## 状态与数据
 
-## 2026-11-10 · 项目图标接入
+主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
 
-- 将圆形罗盘图标重绘为 SVG，从 SVG 手动导出 16–1024px PNG 与多尺寸 ICO，保存于 Git 忽略的 design/icons。
-- 替换页头品牌图标、SVG favicon，增加 ICO、PNG 和 Apple 触屏图标声明；运行时副本位于 static。
+`selected` 和 `visited` 由主页持有，`collapsed` 与设置弹窗由 `PortalShell` 持有，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。设置对话框提供语言切换。
 
-## 2026-11-11 · 内置 SVG 图标
+站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。仅语言偏好通过 tsnav_locale Cookie 持久化。
 
-- 接入 Material Symbols Rounded 和 Simple Icons 的本地 SVG 数据，统一类型化图标组件，替换站点字母占位及外链箭头，记录来源和许可。
+## 部署边界
 
-## 2026-11-11 · 主页原型
+构建使用 Cloudflare Pages adapter，`wrangler.jsonc` 指定 Pages 输出目录，不使用 Workers-only 的 assets 配置。未来增加 KV / D1 等绑定时，需同步 Wrangler 配置、Wrangler 绑定类型和本文件。
 
-- 按 design/main 实现可折叠侧栏、五引擎搜索、八张快捷卡片与页脚，保留 TSNav 品牌和系统浅深主题。
-- 增加移动端模态抽屉、分类筛选、页面内最近访问、界面语言设置、返回顶部和死链信息复制原型；不接入账户或反馈服务。
-- 分类和站点内容按原型硬编码于页面，仅通用控件接入中英文翻译。
-- 更新主页浏览器回归，覆盖搜索地址与编码、分类、侧栏、移动布局和国际化边界。
+## SvelteKit 3 配置约定
 
-## 2026-11-11 · 主页组件拆分与搜索改进
+工程配置集中在 `vite.config.ts` 的 `sveltekit({ adapter, preprocess })` 中，不保留旧版 `svelte.config.js`。`tsconfig.json` 继承 `$app/tsconfig`；内部模块通过 package.json 的 `#lib/*` 子路径导入映射引用并写出扩展名。当前 TypeScript 使用上游要求的 6.x，不盲目安装不满足 peer 范围的新主版本。
 
-- 将侧栏、页脚、导航卡片、搜索栏拆为 Sidebar、Footer、NavigationCard、SearchBar 四个组件，静态分类和站点仍由页面提供。
-- 固定侧栏第一项 recommended，使用中英文“常用推荐 / Recommended”。
-- 五个搜索引擎统一采用本地 Simple Icons 品牌 SVG。
-- 参考官方 M3 Search 重做 56px 胶囊输入区，去除浮动标签及右侧搜索按钮，有内容时显示 × 清空并恢复输入焦点，保留回车搜索。
-- 类型检查、生产构建与 8 项浏览器回归通过。
+## 国际化边界
 
-## 2026-11-11 · 搜索引擎尺寸与移动适配
+服务端 handle 通过 Paraglide 中间件隔离请求语言，并填充 HTML 的 lang/dir；Pages 启用 nodejs_compat。搜索、页脚、设置、反馈、空状态和无障碍提示通过编译消息函数获取文案；侧栏第一项调用 `m.nav_recommended()`，其稳定 ID 固定为 `recommended`。其余原型分类、站点名称与描述硬编码，不随界面语言变化。默认中文，Cookie 可选择英文；不改变现有路由。HTML 禁用共享缓存。生成产物不纳入版本控制，check / build 负责生成与校验。
 
-- 将五个搜索引擎品牌 SVG 从 18px 缩至原型的 16px。
-- 搜索面板内容宽度不超过 600px 时将引擎按钮组切换为原生下拉选择，显示当前引擎品牌图标，保留键盘和系统移动选择器支持。
-- 两种选择方式共享状态，调整窗口或折叠侧栏时保留引擎和输入内容。
+## SVG 图标
 
-## 2026-11-11 · 移动搜索引擎菜单重做
+`src/lib/icons/index.ts` 静态注册 Material Symbols Rounded 与 Simple Icons；`Icon.svelte` 以 currentColor 渲染内联 SVG，SSR 可用。站点数据的 icon 字段替代 monogram，保存类型化图标名。来源、许可、扩展方式见 [图标规范](icons.md)。
 
-- 移除原生下拉选择框；移动端当前引擎按钮复用桌面样式，仅点击时展开菜单。
-- 接入官方 Material Web 菜单和菜单项，按参考截图设置圆角浮层、阴影、品牌图标、选中勾选及悬停反馈。
-- 补齐方向键选择、Enter / Space 确认、Escape 取消、点击外部关闭、焦点恢复和跨断点关闭浮层。
-- `pnpm check`、`pnpm build` 及 10 项浏览器测试通过。
+## 主页组件接口
 
-## 2026-11-11 · 移动顶栏和主页高度修复
+- `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 false）和 `onselect` / `ontoggle` / `onsettings` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定 i18n 推荐入口。
+- `NavigationCard`：主页和分类页共用同一张卡片，接收 `NavigationSite`、可选 `onvisit(id)` 和 `headingLevel`（默认 2）。访问图标默认隐藏，仅悬停或键盘焦点显示；说明固定为最多两行并省略；直接输出 SSR 外链。`NavigationCardGrid` 负责按实际容器宽度使用 1 / 2 / 3 / 4 列；主页最多 5 列并限制主网格宽度，分类分组达到 5 张卡片时切换按最小卡片宽度自动流式换列。
+- `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
+- `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。
+- `types/navigation.ts`：导出 `NavigationCategory`、`NavigationSite`、递归 `CategorySection` 和 `CategoryPage`，只描述内容结构，不保存业务数据。
+- `PortalShell`：接收 `categories`、`selected`、`onselect`、`sites`、内容 snippet 与 `variant`（home / directory），统一渲染侧栏、页脚、移动抽屉及设置。
 
-- 移除移动顶栏中间品牌与右侧设置按钮，保留菜单入口及侧栏原有内容。
-- 统一页面的动态视口高度与 flex 布局，合并内容区重复的上下留白。短内容时页脚贴底、搜索与卡片整体居中；长内容时自然滚动，页脚位于末尾。
-- `pnpm check` 0 错误、0 警告；生产构建成功；13 项浏览器回归通过，覆盖短内容无滚动、居中与页脚贴底，以及长内容滚动和页脚可达。
+组件样式仍统一维护在 `src/app.css`，共用 Material 系统语义令牌；没有新增 UI 框架或运行时图标请求。
 
-## 2026-11-11 · 修复移动抽屉展开动画
+## 主页高度布局
 
-- 补齐每次打开抽屉时的左侧滑入与遮罩渐显动画。
-- 分离滑动面板和固定遮罩点击区域，保留原生模态焦点管理、Escape、遮罩与分类点击关闭。
-- 遵循减少动态效果设置，关闭动画时直接显示抽屉。
-- `pnpm check` 0 错误、0 警告；生产构建成功；15 项浏览器测试通过，包含重复展开的动画轨迹、固定遮罩点击区域和减少动态效果回归。
+`.portal` 使用最小 `100dvh`（回退 `100svh`）和纵向 flex，将移动顶栏、主内容与页脚放在同一高度分配中。`.main-wrapper` 占据剩余空间，不单独设置视口最小高度；main 和 footer 不压缩内容，dashboard 通过自动外边距在 main 内整体居中。短内容页脚贴底，长内容撑开文档并正常滚动。main 统一维护上下留白，dashboard 不重复增加留白。移动顶栏只保留菜单按钮；侧栏和抽屉中的品牌、分类和设置保留。
 
-## 2026-11-11 · 补齐移动抽屉收回动画
+## 移动抽屉动画
 
-- 所有关闭入口统一先播放 200ms 面板滑出与遮罩淡出，再关闭原生 dialog。
-- 关闭按钮、遮罩、Escape、分类切换及设置入口均接入退场流程；设置弹窗等待抽屉退场后打开。
-- 退场从当前动画位置开始，重复关闭请求不重复执行；减少动态效果时直接关闭。
-- `pnpm check` 0 错误、0 警告，生产构建成功，16 项浏览器测试通过，覆盖全部关闭入口的退场过程及设置弹窗顺序。
+移动抽屉继续使用原生 dialog 提供模态、Escape 关闭和焦点恢复。dialog 作为透明的全屏外壳，内部 `.drawer-panel` 承载侧栏内容与个人区域，遮罩关闭按钮为独立的全屏点击区域。每次出现 `[open]` 时面板执行 260ms 从左侧滑入动画，原生 `::backdrop` 同步渐显；面板动画不会移动遮罩点击区域。所有关闭入口统一调用 `closeDrawer()`，先从面板当前位置执行 200ms 滑出与遮罩淡出，通过动画 finished Promise 等待完成后才执行原生 `close()`；分类切换和设置弹窗在抽屉退出后执行。Escape 的原生 cancel 被拦截以走同一流程，重复关闭请求被忽略。`prefers-reduced-motion: reduce` 下禁用面板及遮罩动画。
 
-## 2026-11-11 · 开发分类目录原型
+## 动态分类路由与可定制名称
 
-- 参考 design/child 实现“开发技术与基础架构”页面，按前端、后端运行时、容器编排和 DevOps 展示多级分组与 16 个站点。
-- 新增 `/category/[slug]` 动态路由，示例地址 `/category/development`；侧栏真实链接接入页面，未知分类返回 404。
-- 分离稳定分类 ID、显示名称和 URL slug，支持编码后的自定义中文标识，预留替换为用户配置数据源的解析入口。
-- 提取 PortalShell 共享外壳，扩展 NavigationCard 目录变体，保留主页高度布局及移动抽屉双向动画。
-- 目录内容使用硬编码静态配置，不增加 i18n 资源，适配桌面四列、平板两列与手机单列。
-- `pnpm check` 0 错误、0 警告；生产构建成功；22 项浏览器与路由测试通过，已对照桌面、移动和深色主题截图。
+分类页使用 `/category/[slug]`，当前示例为 `/category/development`。页面复现 `design/child` 的多级分组、桌面四列卡片、两行说明及缩进；主页面最多 5 列并限制网格最大宽度；分类页分组默认按 1 / 2 / 3 / 4 列，达到 5 张卡片时使用 220px 最小宽度的 auto-fit 流式策略，小屏自动回落单列。目录页从顶部排列，主页仍整体居中。
 
-## 2026-11-11 · 统一导航卡片与自适应网格
+分类配置分开存储 `id`（稳定标识 dev）、`label`（侧栏显示名）、`title`（页标题）与 `slug`（URL 标识 development）。改显示名不会改变 URL 或选中状态，slug 支持中文与空格并在生成链接时由 `encodeURIComponent` 编码。每个配置应有唯一的 id 和 slug；slug 是单个路径段，而非任意 URL。
 
-- 主页和分类页统一使用 `NavigationCard` 与 `NavigationCardGrid`，移除两套卡片样式差异。
-- 访问箭头默认隐藏，仅在卡片悬停或键盘聚焦时显示；站点说明统一限制两行并省略。
-- 使用容器查询按卡片区域宽度切换 1、2、3、4 列，增加三列中间状态；侧栏折叠、分类缩进和主内容宽度会自动参与计算。
-- `pnpm check` 0 错误、0 警告；生产构建成功；26 项浏览器测试通过。
+`data/categories.ts` 的导出 API：
+
+- `categoryPages`：静态原型配置，包含递归 children / sites。新增分类只需配置数据，通用页面没有 development 分支。
+- `findCategoryBySlug(slug, pages = categoryPages)`：按已解码 slug 精确查找；不以显示名称猜测、不回退为默认分类。可注入后续用户配置数据源。
+- `categoryPath(id, pages = categoryPages)`：按稳定 ID 生成编码后的分类路由；未配置独立页返回 undefined。
+- `navigationCategories`：固定推荐入口之外的侧栏静态内容；注册的分类页自动生成真实 href，其他入口保留本地筛选。
+- `collectCategorySites(sections)`：递归收集站点，供共享页脚反馈选择使用。
+
+`category/[slug]/+page.ts` 在 SSR / 客户端导航时使用同一解析规则，未知 slug 返回 HTTP 404。不要再次手动解码路由参数，也不把显示名称硬编码成路由分支。以后接入用户配置时，替换分类数据来源并在写入配置时检查标识唯一性即可。
+
+已注册分类在侧栏使用真实链接，保留修饰键新标签行为；普通点击等待移动抽屉退场后通过页面回调导航。分类页返回常用推荐使用 `/`，返回未注册独立页的分类使用 `/?category=<稳定 ID>`，由主页初始化对应本地筛选。
+- 最终回归：`pnpm test:e2e` 26 项全部通过。

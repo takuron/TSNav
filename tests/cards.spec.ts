@@ -5,7 +5,7 @@ for (const route of ['/', '/category/development']) {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(route);
     const grid = page.locator('.navigation-card-grid').first();
-    for (const [width, columns] of [[320, 1], [390, 2], [900, 2], [1024, 3], [1440, 4]]) {
+    for (const [width, columns] of [[320, 1], [390, 2], [900, 2], [1024, 3], [1440, route === '/' ? 5 : 4]]) {
       await page.setViewportSize({ width, height: 1000 });
       await expect.poll(() => grid.evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(columns);
       expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);

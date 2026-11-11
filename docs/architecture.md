@@ -74,7 +74,7 @@ tests/                        生产预览浏览器集成测试
 ## 主页组件接口
 
 - `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 false）和 `onselect` / `ontoggle` / `onsettings` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定 i18n 推荐入口。
-- `NavigationCard`：主页和分类页共用同一张卡片，接收 `NavigationSite`、可选 `onvisit(id)` 和 `headingLevel`（默认 2）。访问图标默认隐藏，仅悬停或键盘焦点显示；说明固定为最多两行并省略；直接输出 SSR 外链。`NavigationCardGrid` 负责按实际容器宽度使用 1 / 2 / 3 / 4 列。
+- `NavigationCard`：主页和分类页共用同一张卡片，接收 `NavigationSite`、可选 `onvisit(id)` 和 `headingLevel`（默认 2）。访问图标默认隐藏，仅悬停或键盘焦点显示；说明固定为最多两行并省略；直接输出 SSR 外链。`NavigationCardGrid` 负责按实际容器宽度使用 1 / 2 / 3 / 4 列；主页最多 5 列并限制主网格宽度，分类分组达到 5 张卡片时切换按最小卡片宽度自动流式换列。
 - `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
 - `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。
 - `types/navigation.ts`：导出 `NavigationCategory`、`NavigationSite`、递归 `CategorySection` 和 `CategoryPage`，只描述内容结构，不保存业务数据。
@@ -92,7 +92,7 @@ tests/                        生产预览浏览器集成测试
 
 ## 动态分类路由与可定制名称
 
-分类页使用 `/category/[slug]`，当前示例为 `/category/development`。页面复现 `design/child` 的多级分组、桌面四列卡片、两行说明及缩进；小于 1200px 使用两列，小于 600px 使用单列并取消分组缩进。目录页从顶部排列，主页仍整体居中。
+分类页使用 `/category/[slug]`，当前示例为 `/category/development`。页面复现 `design/child` 的多级分组、桌面四列卡片、两行说明及缩进；主页面最多 5 列并限制网格最大宽度；分类页分组默认按 1 / 2 / 3 / 4 列，达到 5 张卡片时使用 220px 最小宽度的 auto-fit 流式策略，小屏自动回落单列。目录页从顶部排列，主页仍整体居中。
 
 分类配置分开存储 `id`（稳定标识 dev）、`label`（侧栏显示名）、`title`（页标题）与 `slug`（URL 标识 development）。改显示名不会改变 URL 或选中状态，slug 支持中文与空格并在生成链接时由 `encodeURIComponent` 编码。每个配置应有唯一的 id 和 slug；slug 是单个路径段，而非任意 URL。
 

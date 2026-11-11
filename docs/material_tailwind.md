@@ -85,3 +85,8 @@ pnpm test:e2e
 参照：[Material Web Menus](https://material-web.dev/components/menu/) 及用户提供的浮层菜单截图。菜单组件类型同步维护在 `elements.d.ts`，所有样式通过公开令牌配置，不穿透 Shadow DOM。
 
 本次验证：`pnpm check` 0 错误、0 警告；`pnpm build` 成功；`pnpm test:e2e` 10 项全部通过，覆盖移动与桌面按钮样式一致、五引擎菜单搜索、方向键选择及菜单关闭与焦点恢复。
+
+
+## 导航网格与侧栏色彩（2026-11-11）
+
+主页网格最大宽度为 1240px，容器宽度达到 1088px 时最多 5 列；分类页的分组在站点数量达到 5 个时使用 `repeat(auto-fit, minmax(220px, 1fr))`，每个额外的可用卡片空间自动产生一列。两者均使用容器查询，避免依赖整个视口宽度。侧栏桌面展开、折叠和移动抽屉共享 `--sidebar-surface: var(--md-sys-color-surface-container-low)`，随浅深主题统一变化。

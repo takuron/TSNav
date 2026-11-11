@@ -32,7 +32,7 @@
       <svelte:element this={`h${Math.min(level, 6)}`} id={`section-${section.id}`}>{section.title}</svelte:element>
     </div>
     {#if section.sites?.length}
-      <NavigationCardGrid sites={section.sites} class="directory-grid" headingLevel={Math.min(level + 1, 6) as 3 | 4 | 5 | 6} />
+      <NavigationCardGrid sites={section.sites} flow={section.sites.length >= 5} class="directory-grid" headingLevel={Math.min(level + 1, 6) as 3 | 4 | 5 | 6} />
     {/if}
     {#if section.children?.length}
       <div class="directory-children">

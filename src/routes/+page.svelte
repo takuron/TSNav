@@ -54,7 +54,7 @@
         <SearchBar />
         <section aria-label={selectedLabel}>
           {#if !['recommended', 'discover'].includes(selected)}<h2 class="category-heading">{selectedLabel}</h2>{/if}
-          <NavigationCardGrid sites={visibleSites} onvisit={visit} />
+          <NavigationCardGrid sites={visibleSites} onvisit={visit} class="home-grid" />
           {#if visibleSites.length === 0}<div class="empty-state"><Icon name="history" size={36} /><h2>{m.recent_empty()}</h2><p>{m.recent_hint()}</p><!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (Material 内部原生按钮提供键盘行为) --><md-filled-button onclick={() => selectCategory('recommended')}>{m.reset_filters()}</md-filled-button></div>{/if}
         </section>
       </div>
