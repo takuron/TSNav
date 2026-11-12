@@ -47,7 +47,7 @@ tests/                        生产预览浏览器集成测试
 
 主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
 
-`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
+`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有，默认收起并通过 localStorage 持久化，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
 
 站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。仅语言偏好通过 tsnav_locale Cookie 持久化。
 

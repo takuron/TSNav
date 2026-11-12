@@ -25,6 +25,9 @@ test('侧栏分类、折叠和最近访问在页面内工作', async ({ page, co
   await (await popup).close();
   await page.getByRole('button', { name: '历史与最近访问', exact: true }).click();
   await expect(page.locator('.site-card')).toHaveCount(1);
+  await expect(page.locator('.portal')).toHaveClass(/collapsed/);
+  await page.getByRole('button', { name: '收起或展开侧栏' }).click();
+  await expect(page.locator('.portal')).not.toHaveClass(/collapsed/);
   await page.getByRole('button', { name: '收起或展开侧栏' }).click();
   await expect(page.locator('.portal')).toHaveClass(/collapsed/);
   await expect(page.locator('.sidebar')).toHaveCSS('width', '72px');

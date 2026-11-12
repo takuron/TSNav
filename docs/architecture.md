@@ -46,7 +46,7 @@ tests/                        生产预览浏览器集成测试
 
 主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。站点内容保存在主页和分类静态配置中，未来可替换为独立的数据获取逻辑。
 
-`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
+`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有，默认收起并通过 `localStorage` 在主页和分类页之间保持，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
 
 站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。不保存语言偏好。
 
@@ -73,7 +73,7 @@ HTML 固定使用中文 `lang="zh-CN"` 和 `dir="ltr"`。界面文案集中在 `
 - `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
 - `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。
 - `types/navigation.ts`：导出 `NavigationCategory`、`NavigationSite`、递归 `CategorySection` 和 `CategoryPage`，只描述内容结构，不保存业务数据。
-- `PortalShell`：接收 `categories`、`selected`、`onselect`、`sites`、内容 snippet 与 `variant`（home / directory），统一渲染侧栏、页脚、移动抽屉及设置。
+- `PortalShell`：接收 `categories`、`selected`、`onselect`、`sites`、内容 snippet 与 `variant`（home / directory），是所有带侧栏页面共享的页面模板，统一渲染侧栏、页脚和移动抽屉；侧栏收起状态默认开启并持久化。
 
 组件样式仍统一维护在 `src/app.css`，共用 Material 系统语义令牌；没有新增 UI 框架或运行时图标请求。
 

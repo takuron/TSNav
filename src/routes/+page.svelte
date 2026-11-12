@@ -35,7 +35,7 @@
 
   function selectCategory(id: string) {
     const path = categoryPath(id);
-    if (path) void goto(path);
+    if (path) void goto(path, { reset: false });
     else selected = id;
   }
   function visit(id: string) {

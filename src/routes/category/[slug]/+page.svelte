@@ -13,9 +13,9 @@
   function selectCategory(id: string) {
     const path = categoryPath(id);
     if (path) {
-      if (id !== data.category.id) void goto(path);
+      if (id !== data.category.id) void goto(path, { reset: false });
     } else {
-      void goto(id === 'recommended' ? '/' : `/?category=${encodeURIComponent(id)}`);
+      void goto(id === 'recommended' ? '/' : `/?category=${encodeURIComponent(id)}`, { reset: false });
     }
   }
 </script>
