@@ -16,52 +16,64 @@
   "homepage": {
     "commonLinks": [
       {
-        "name": "GitHub",
-        "url": "https://github.com",
-        "icon": "icon://github",
-        "description": "全球最大的开源代码托管与协作平台"
+        "name": "微博",
+        "description": "记录和分享生活的中文社交平台",
+        "url": "https://weibo.com",
+        "icon": "icon://sinaweibo"
       },
       {
-        "name": "Claude / ChatGPT",
-        "url": "https://claude.ai",
-        "icon": "md://psychology",
-        "description": "前沿对话大模型协同与推理引擎"
+        "name": "百度贴吧",
+        "description": "基于兴趣主题的中文社区交流平台",
+        "url": "https://tieba.baidu.com",
+        "icon": "https://api.iconify.design/arcticons:baidu-tieba"
       },
       {
-        "name": "Figma Design",
-        "url": "https://figma.com",
-        "icon": "icon://figma",
-        "description": "下一代云端 UI/UX 协作与原型设计器"
+        "name": "知乎",
+        "description": "中文知识问答与交流社区",
+        "url": "https://www.zhihu.com",
+        "icon": "icon://zhihu"
       },
       {
-        "name": "Vercel",
-        "url": "https://vercel.com",
-        "icon": "icon://vercel",
-        "description": "极速前端全栈托管与边缘计算网络"
-      },
-      {
-        "name": "Notion",
-        "url": "https://www.notion.so",
-        "icon": "md://note",
-        "description": "结构化文档、团队知识库与多维表格"
-      },
-      {
-        "name": "哔哩哔哩 / YouTube",
+        "name": "Bilibili",
+        "description": "综合视频与创意内容平台",
         "url": "https://www.bilibili.com",
-        "icon": "md://video",
-        "description": "优质技术视频教程与全球创意内容"
+        "icon": "icon://bilibili"
       },
       {
-        "name": "Stack Overflow",
-        "url": "https://stackoverflow.com",
-        "icon": "icon://stackoverflow",
-        "description": "全球最大的专业软件开发疑难解答社区"
+        "name": "爱奇艺",
+        "description": "在线视频和影视内容平台",
+        "url": "https://www.iqiyi.com",
+        "icon": "https://api.iconify.design/logos:iqiyi.svg"
       },
       {
-        "name": "Dribbble & Behance",
-        "url": "https://dribbble.com",
-        "icon": "md://palette",
-        "description": "全球顶尖数字产品 UI 与插画艺术灵感"
+        "name": "网易邮箱",
+        "description": "网易提供的电子邮件服务",
+        "url": "https://mail.163.com",
+        "icon": "https://api.iconify.design/logos:netease.svg"
+      },
+      {
+        "name": "QQ邮箱",
+        "description": "腾讯提供的电子邮件服务",
+        "url": "https://mail.qq.com",
+        "icon": "https://api.iconify.design/logos:qq.svg"
+      },
+      {
+        "name": "网易云音乐",
+        "description": "音乐发现与在线音乐服务",
+        "url": "https://music.163.com",
+        "icon": "icon://neteasecloudmusic"
+      },
+      {
+        "name": "DeepSeek",
+        "description": "深度求索人工智能服务",
+        "url": "https://www.deepseek.com",
+        "icon": "icon://deepseek"
+      },
+      {
+        "name": "GitHub",
+        "description": "全球最大的开源代码托管与协作平台",
+        "url": "https://github.com",
+        "icon": "icon://github"
       }
     ]
   },

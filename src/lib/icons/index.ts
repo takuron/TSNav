@@ -16,7 +16,6 @@ import sourceNotes from '@iconify-icons/material-symbols/source-notes-rounded';
 import bugReport from '@iconify-icons/material-symbols/bug-report-rounded';
 import api from '@iconify-icons/material-symbols/api-rounded';
 import check from '@iconify-icons/material-symbols/check-rounded';
-import baidu from '@iconify-icons/simple-icons/baidu';
 import microsoftbing from '@iconify-icons/simple-icons/microsoftbing';
 import sogou from '@iconify-icons/simple-icons/sogou';
 import duckduckgo from '@iconify-icons/simple-icons/duckduckgo';
@@ -57,6 +56,7 @@ import google from '@iconify-icons/simple-icons/google';
 import youtube from '@iconify-icons/simple-icons/youtube';
 import wikipedia from '@iconify-icons/simple-icons/wikipedia';
 import stackoverflow from '@iconify-icons/simple-icons/stackoverflow';
+import baidu from '@iconify-icons/simple-icons/baidu';
 
 /** Google Material Symbols Rounded：仅静态导入项目需要的官方图形。 */
 export const materialIcons = { devices, dns, hub, code, codeBlocks, viewQuilt, bolt, cycle, spa, speed, hexagon, anchor, deployedCode, accountTree, sourceNotes, bugReport, api, check, search, openInNew, menu, close, home, settings, lightMode, darkMode, language, favorite, folder, link, star, gridView, sparkles, terminal, palette, history, collapse, psychology, note, video, quiz, arrowUp, feedback, explore };
@@ -68,6 +68,16 @@ export const brandIcons = { github, svelte, cloudflare, materialdesign, figma, m
 export const brandColors: Partial<Record<keyof typeof brandIcons, string>> = {
   github: '#181717', svelte: '#FF3E00', cloudflare: '#F38020', materialdesign: '#757575', figma: '#F24E1E', mdnwebdocs: '#000000', google: '#4285F4', youtube: '#FF0000', wikipedia: '#000000', stackoverflow: '#F58025', vercel: '#000000', baidu: '#2932E1', microsoftbing: '#008373', sogou: '#FF6700', duckduckgo: '#DE5833'
 };
+
+/** 项目本地缓存的品牌图标；未命中时才允许拼接 Simple Icons CDN。 */
+export const localBrandAssets: Record<string, string> = {};
+
+export { simpleIconCache } from './simpleicon-cache.ts';
+
+/** 将未缓存的 Simple Icons 标识转换为官方 CDN 地址。 */
+export function simpleIconCdnUrl(id: string): string {
+  return `https://cdn.simpleicons.org/${encodeURIComponent(id)}`;
+}
 
 /** 项目允许使用的图标注册表；禁止接收外部 SVG 内容。 */
 export const icons = { ...materialIcons, ...brandIcons };

@@ -76,6 +76,7 @@
   <div class="profile">
     <span class="avatar" aria-hidden="true">T</span>
     <div class="profile-info sidebar-text"><strong>{copy.local_profile()}</strong><span>{copy.local_profile_hint()}</span></div>
+    <button class="icon-button settings-button" type="button" aria-label={copy.settings_label()} title={copy.settings_label()}><Icon name="settings" size={20} /></button>
   </div>
 {/snippet}
 
