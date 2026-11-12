@@ -1,12 +1,12 @@
 <script lang="ts">
-  // 统一管理固定推荐入口、可定制分类、桌面侧栏与移动端模态抽屉。
+  // 统一管理配置分类、桌面侧栏与移动端模态抽屉。
   import { tick } from 'svelte';
   import { copy } from '#lib/copy.ts';
   import Icon from '#lib/components/Icon.svelte';
   import type { NavigationCategory } from '#lib/types/navigation.ts';
 
   let { categories, selected, collapsed = false, onselect, ontoggle }: {
-    /** 页面传入的可定制分类，不包含固定推荐入口。 */
+    /** 页面传入的配置分类。 */
     categories: readonly NavigationCategory[];
     /** 当前分类的稳定 ID。 */
     selected: string;
@@ -56,7 +56,7 @@
 {/snippet}
 {#snippet navigation()}
   <nav class="destination-list" aria-label={copy.category_label()}>
-    {#each [{ id: 'recommended', label: copy.nav_recommended(), icon: 'star' as const, href: undefined }, ...categories] as item}
+    {#each categories as item}
       {#if item.href}
         <a class="destination" href={item.href} aria-current={selected === item.id ? 'page' : undefined} title={item.label} onclick={(event) => {
           if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {

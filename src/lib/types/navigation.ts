@@ -9,9 +9,6 @@ export interface NavigationCategory {
   href?: string;
 }
 
-/** 导航卡片可使用的颜色语义。 */
-export type NavigationTone = 'default' | 'theme';
-
 /** 导航卡片的静态内容，属于静态示例内容。 */
 export interface NavigationSite {
   id: string;
@@ -20,7 +17,6 @@ export interface NavigationSite {
   url: string;
   category: string;
   icon: IconName;
-  tone: NavigationTone;
   badge?: string;
 }
 

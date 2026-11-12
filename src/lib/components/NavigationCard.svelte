@@ -16,7 +16,7 @@
 
 <a class="site-card" href={site.url} target="_blank" rel="noopener noreferrer" aria-label={copy.site_open_label({ name: site.name })} onclick={() => onvisit?.(site.id)}>
   <div class="card-top">
-    <span class="site-icon {site.tone}"><Icon name={site.icon} size={26} /></span>
+    <span class="site-icon"><Icon name={site.icon} size={26} brandColor /></span>
     <span class="card-arrow"><Icon name="openInNew" size={18} /></span>
   </div>
   <div class="card-copy">

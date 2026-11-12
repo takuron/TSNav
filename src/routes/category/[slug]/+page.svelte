@@ -4,7 +4,7 @@
   import PortalShell from '#lib/components/PortalShell.svelte';
   import NavigationCardGrid from '#lib/components/NavigationCardGrid.svelte';
   import Icon from '#lib/components/Icon.svelte';
-  import { navigationCategories, categoryPath, collectCategorySites } from '#lib/data/categories.ts';
+  import { navigationCategories, categoryPath, collectCategorySites } from '#lib/data/navigation-config.ts';
   import type { CategoryPage, CategorySection } from '#lib/types/navigation.ts';
 
   let { data }: { data: { category: CategoryPage } } = $props();

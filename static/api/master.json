@@ -7,21 +7,61 @@
   },
   "site": {
     "name": "TSNav",
-    "description": "可定制的网址导航",
     "footer": {
       "line1": "TSNav · 发现值得收藏的网站",
       "line2": "内容由配置文件维护"
-    }
+    },
+    "description": "可定制的网址导航"
   },
   "homepage": {
     "commonLinks": [
       {
         "name": "GitHub",
-        "description": "代码托管和协作平台",
         "url": "https://github.com",
         "icon": "icon://github",
-        "tone": "theme",
-        "badge": "常用"
+        "description": "全球最大的开源代码托管与协作平台"
+      },
+      {
+        "name": "Claude / ChatGPT",
+        "url": "https://claude.ai",
+        "icon": "md://psychology",
+        "description": "前沿对话大模型协同与推理引擎"
+      },
+      {
+        "name": "Figma Design",
+        "url": "https://figma.com",
+        "icon": "icon://figma",
+        "description": "下一代云端 UI/UX 协作与原型设计器"
+      },
+      {
+        "name": "Vercel",
+        "url": "https://vercel.com",
+        "icon": "icon://vercel",
+        "description": "极速前端全栈托管与边缘计算网络"
+      },
+      {
+        "name": "Notion",
+        "url": "https://www.notion.so",
+        "icon": "md://note",
+        "description": "结构化文档、团队知识库与多维表格"
+      },
+      {
+        "name": "哔哩哔哩 / YouTube",
+        "url": "https://www.bilibili.com",
+        "icon": "md://video",
+        "description": "优质技术视频教程与全球创意内容"
+      },
+      {
+        "name": "Stack Overflow",
+        "url": "https://stackoverflow.com",
+        "icon": "icon://stackoverflow",
+        "description": "全球最大的专业软件开发疑难解答社区"
+      },
+      {
+        "name": "Dribbble & Behance",
+        "url": "https://dribbble.com",
+        "icon": "md://palette",
+        "description": "全球顶尖数字产品 UI 与插画艺术灵感"
       }
     ]
   },
@@ -33,9 +73,7 @@
   "categories": [
     {
       "slug": "development",
-      "label": "开发与云原生",
       "title": "开发技术与基础架构",
-      "description": "开发、云原生和工程效率工具",
       "icon": "md://terminal"
     }
   ]

@@ -110,17 +110,11 @@ static/api/user/{uuid}/{slug}.json      -> /api/user/{uuid}/{slug}.json
   "description": "代码托管和协作平台",
   "url": "https://github.com",
   "icon": "icon://github",
-  "tone": "theme",
   "badge": "常用"
 }
 ```
 
-`badge` 可选。`tone` 只能是：
-
-| 值 | 含义 |
-| --- | --- |
-| `default` | 使用卡片默认中性色 |
-| `theme` | 使用当前 Material 主题色 |
+`badge` 可选。卡片图标统一使用界面的默认 Material 主题样式，不再配置单独的颜色选项。
 
 ## 图标格式
 

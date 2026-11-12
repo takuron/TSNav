@@ -64,8 +64,23 @@ export const materialIcons = { devices, dns, hub, code, codeBlocks, viewQuilt, b
 /** Simple Icons 品牌图形，统一单色并继承主题颜色。 */
 export const brandIcons = { github, svelte, cloudflare, materialdesign, figma, mdnwebdocs, google, youtube, wikipedia, stackoverflow, vercel, baidu, microsoftbing, sogou, duckduckgo };
 
+/** Simple Icons 官方品牌色；未登记品牌继续继承页面主题色。 */
+export const brandColors: Partial<Record<keyof typeof brandIcons, string>> = {
+  github: '#181717', svelte: '#FF3E00', cloudflare: '#F38020', materialdesign: '#757575', figma: '#F24E1E', mdnwebdocs: '#000000', google: '#4285F4', youtube: '#FF0000', wikipedia: '#000000', stackoverflow: '#F58025', vercel: '#000000', baidu: '#2932E1', microsoftbing: '#008373', sogou: '#FF6700', duckduckgo: '#DE5833'
+};
+
 /** 项目允许使用的图标注册表；禁止接收外部 SVG 内容。 */
 export const icons = { ...materialIcons, ...brandIcons };
 
 /** 类型安全的内置图标名称。 */
 export type IconName = keyof typeof icons;
+
+/** 图标来源标记；Material 和项目登记的常用 Simple Icons 永远从本地缓存读取。 */
+export type IconSource = 'material-local' | 'simple-local' | 'simple-online' | 'image-online';
+
+/** 根据配置 URI 判断图标缓存来源；在线来源只作为后续受控加载的标记。 */
+export function iconSource(value: string): IconSource {
+  if (value.startsWith('md://')) return 'material-local';
+  if (value.startsWith('icon://')) return Object.prototype.hasOwnProperty.call(brandIcons, value.slice(7)) ? 'simple-local' : 'simple-online';
+  return value.startsWith('https://') ? 'image-online' : 'image-online';
+}

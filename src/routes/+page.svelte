@@ -5,33 +5,22 @@
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import PortalShell from '#lib/components/PortalShell.svelte';
-  import { navigationCategories, categoryPath } from '#lib/data/categories.ts';
+  import { navigationCategories, categoryPath, defaultNavigation } from '#lib/data/navigation-config.ts';
   import NavigationCardGrid from '#lib/components/NavigationCardGrid.svelte';
   import SearchBar from '#lib/components/SearchBar.svelte';
   import type { NavigationSite } from '#lib/types/navigation.ts';
 
   const destinations = navigationCategories;
-  const shortcuts: NavigationSite[] = [
-    { id: 'github', name: 'GitHub', description: '全球最大的开源代码托管与协作平台', url: 'https://github.com', category: 'dev', icon: 'github', tone: 'default' },
-    { id: 'claude', name: 'Claude / ChatGPT', description: '前沿对话大模型协同与推理引擎', url: 'https://claude.ai', category: 'ai', icon: 'psychology', tone: 'theme' },
-    { id: 'figma', name: 'Figma Design', description: '下一代云端 UI/UX 协作与原型设计器', url: 'https://figma.com', category: 'design', icon: 'figma', tone: 'theme' },
-    { id: 'vercel', name: 'Vercel', description: '极速前端全栈托管与边缘计算网络', url: 'https://vercel.com', category: 'dev', icon: 'vercel', tone: 'default' },
-    { id: 'notion', name: 'Notion', description: '结构化文档、团队知识库与多维表格', url: 'https://www.notion.so', category: 'dev', icon: 'note', tone: 'default' },
-    { id: 'bilibili', name: '哔哩哔哩 / YouTube', description: '优质技术视频教程与全球创意内容', url: 'https://www.bilibili.com', category: 'discover', icon: 'video', tone: 'theme' },
-    { id: 'stackoverflow', name: 'Stack Overflow', description: '全球最大的专业软件开发疑难解答社区', url: 'https://stackoverflow.com', category: 'dev', icon: 'quiz', tone: 'theme' },
-    { id: 'dribbble', name: 'Dribbble & Behance', description: '全球顶尖数字产品 UI 与插画艺术灵感', url: 'https://dribbble.com', category: 'design', icon: 'palette', tone: 'theme' }
-  ];
+  const shortcuts: readonly NavigationSite[] = defaultNavigation.shortcuts;
   // 从分类页返回本地筛选时，使用稳定 ID 初始化，不以显示名判定。
   function initialCategory() {
     const id = typeof window !== 'undefined' ? page.url.searchParams.get('category') : null;
-    return destinations.some((category) => category.id === id && !category.href) ? id! : 'recommended';
+    return destinations.some((category) => category.id === id) ? id! : 'recommended';
   }
   let selected = $state(initialCategory());
   let visited = $state<string[]>([]);
-  const selectedLabel = $derived(selected === 'recommended' ? copy.nav_recommended() : destinations.find((item) => item.id === selected)?.label);
-  const visibleSites = $derived(selected === 'recent'
-    ? visited.map((id) => shortcuts.find((site) => site.id === id)!).filter(Boolean)
-    : shortcuts.filter((site) => ['recommended', 'discover'].includes(selected) || site.category === selected));
+  const selectedLabel = $derived(destinations.find((item) => item.id === selected)?.label);
+  const visibleSites = $derived(selected === 'recommended' ? shortcuts : shortcuts.filter((site) => site.category === selected));
 
   function selectCategory(id: string) {
     const path = categoryPath(id);
@@ -53,9 +42,9 @@
       <div class="dashboard">
         <SearchBar />
         <section aria-label={selectedLabel}>
-          {#if !['recommended', 'discover'].includes(selected)}<h2 class="category-heading">{selectedLabel}</h2>{/if}
+          {#if selected !== 'recommended'}<h2 class="category-heading">{selectedLabel}</h2>{/if}
           <NavigationCardGrid sites={visibleSites} onvisit={visit} class="home-grid" />
-          {#if visibleSites.length === 0}<div class="empty-state"><Icon name="history" size={36} /><h2>{copy.recent_empty()}</h2><p>{copy.recent_hint()}</p><!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (Material 内部原生按钮提供键盘行为) --><md-filled-button onclick={() => selectCategory('recommended')}>{copy.reset_filters()}</md-filled-button></div>{/if}
+          {#if visibleSites.length === 0}<div class="empty-state"><Icon name="explore" size={36} /><h2>{copy.sites_title()}</h2><p>{copy.page_description()}</p></div>{/if}
         </section>
       </div>
 </PortalShell>

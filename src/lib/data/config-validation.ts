@@ -25,12 +25,11 @@ function validateLink(value: unknown, path: string, issues: ValidationIssue[]): 
     issue(issues, path, '链接必须是对象');
     return;
   }
-  for (const field of ['name', 'description', 'url', 'icon', 'tone']) {
+  for (const field of ['name', 'description', 'url', 'icon']) {
     if (typeof value[field] !== 'string' || value[field].length === 0) issue(issues, `${path}.${field}`, '必须是非空字符串');
   }
   if (typeof value.url === 'string' && !HTTPS_URL.test(value.url)) issue(issues, `${path}.url`, '必须使用 https://');
   if (typeof value.icon === 'string' && !SITE_ICON.test(value.icon)) issue(issues, `${path}.icon`, '必须是 md://、icon:// 或 https://');
-  if (value.tone !== 'default' && value.tone !== 'theme') issue(issues, `${path}.tone`, '只能是 default 或 theme');
 }
 
 function validateGroup(value: unknown, path: string, depth: number, issues: ValidationIssue[]): void {
@@ -77,6 +76,8 @@ function validateMaster(value: unknown, filePath: string, issues: ValidationIssu
       if (typeof category.slug !== 'string' || category.slug.length === 0) issue(issues, `${path}.slug`, '必须是非空字符串');
       else if (slugs.has(category.slug)) issue(issues, `${path}.slug`, '不能重复');
       else slugs.add(category.slug);
+      if (typeof category.title !== 'string' || category.title.length === 0) issue(issues, `${path}.title`, '必须是非空字符串');
+      if (category.label !== undefined && typeof category.label !== 'string') issue(issues, `${path}.label`, '必须是字符串');
       if (typeof category.icon !== 'string' || !CATEGORY_ICON.test(category.icon)) issue(issues, `${path}.icon`, '必须是 md:// 图标');
     });
   }
@@ -91,7 +92,8 @@ function validateCategory(value: unknown, filePath: string, issues: ValidationIs
     return;
   }
   const category = value.category;
-  for (const field of ['label', 'title', 'description']) if (typeof category[field] !== 'string') issue(issues, `${filePath}.category.${field}`, '必须是字符串');
+  if (typeof category.title !== 'string' || category.title.length === 0) issue(issues, `${filePath}.category.title`, '必须是非空字符串');
+  if (category.label !== undefined && typeof category.label !== 'string') issue(issues, `${filePath}.category.label`, '必须是字符串');
   if (typeof category.icon !== 'string' || !CATEGORY_ICON.test(category.icon)) issue(issues, `${filePath}.category.icon`, '必须是 md:// 图标');
   if (!Array.isArray(category.links)) issue(issues, `${filePath}.category.links`, '必须是数组');
   else category.links.forEach((link, index) => validateLink(link, `${filePath}.category.links[${index}]`, issues));

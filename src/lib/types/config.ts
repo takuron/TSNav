@@ -1,4 +1,3 @@
-import type { NavigationTone } from '#lib/types/navigation.ts';
 
 /** 配置文件中的用户身份信息。 */
 export interface ConfigProfile {
@@ -32,16 +31,14 @@ export interface ConfigLink {
   description: string;
   url: string;
   icon: string;
-  tone: NavigationTone;
   badge?: string;
 }
 
 /** master.json 中的顶层分类注册信息。 */
 export interface ConfigCategoryRegistration {
   slug: string;
-  label: string;
+  label?: string;
   title: string;
-  description: string;
   icon: string;
 }
 
@@ -71,9 +68,8 @@ export interface CategoryConfig {
   scope: 'default' | 'user';
   slug: string;
   category: {
-    label: string;
+    label?: string;
     title: string;
-    description: string;
     icon: string;
     links: ConfigLink[];
     children: CategoryGroup[];
