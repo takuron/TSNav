@@ -54,6 +54,8 @@ tests/                        生产预览浏览器集成测试
 
 构建使用 adapter-static，`wrangler.jsonc` 指定 Pages 输出目录，不使用 Workers-only 的 assets 配置。未来增加 KV / D1 等绑定时，需同步 Wrangler 配置、Wrangler 绑定类型和本文件。
 
+JSON 导航配置的字段、文件布局和校验规则见 [JSON 导航配置规范](navigation-config.md)。
+
 ## SvelteKit 3 配置约定
 
 工程配置集中在 `vite.config.ts` 的 `sveltekit({ adapter, preprocess })` 中，不保留旧版 `svelte.config.js`。`tsconfig.json` 继承 `$app/tsconfig`；内部模块通过 package.json 的 `#lib/*` 子路径导入映射引用并写出扩展名。当前 TypeScript 使用上游要求的 6.x，不盲目安装不满足 peer 范围的新主版本。

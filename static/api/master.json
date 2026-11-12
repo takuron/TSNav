@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "scope": "default",
+  "profile": {
+    "username": "default",
+    "email": "default@example.com"
+  },
+  "site": {
+    "name": "TSNav",
+    "description": "可定制的网址导航",
+    "footer": {
+      "line1": "TSNav · 发现值得收藏的网站",
+      "line2": "内容由配置文件维护"
+    }
+  },
+  "homepage": {
+    "commonLinks": [
+      {
+        "name": "GitHub",
+        "description": "代码托管和协作平台",
+        "url": "https://github.com",
+        "icon": "icon://github",
+        "tone": "theme",
+        "badge": "常用"
+      }
+    ]
+  },
+  "settings": {
+    "defaultSearchEngine": "google",
+    "theme": "system",
+    "language": "zh-CN"
+  },
+  "categories": [
+    {
+      "slug": "development",
+      "label": "开发与云原生",
+      "title": "开发技术与基础架构",
+      "description": "开发、云原生和工程效率工具",
+      "icon": "md://terminal"
+    }
+  ]
+}

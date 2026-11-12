@@ -8,33 +8,33 @@ export const categoryPages: readonly CategoryPage[] = [
     sections: [
       { id: 'frontend', title: '前端与客户端架构', icon: 'devices', children: [
         { id: 'web-frameworks', title: '现代前端生态与框架', sites: [
-          { id: 'react', name: 'React', description: '用于构建现代 Web 响应式交互界面的渐进式组件化库。', url: 'https://react.dev', category: 'dev', icon: 'codeBlocks', tone: 'blue' },
-          { id: 'vue', name: 'Vue.js', description: '易学易用、性能卓越且全能灵活的渐进式 JavaScript 框架。', url: 'https://vuejs.org', category: 'dev', icon: 'viewQuilt', tone: 'blue' },
-          { id: 'nextjs', name: 'Next.js', description: 'Vercel 推出的全栈 React 框架，提供极速 SSR 与服务端组件支持。', url: 'https://nextjs.org', category: 'dev', icon: 'bolt', tone: 'blue' },
-          { id: 'svelte', name: 'Svelte', description: '零运行时开销的前端编译器，提供简洁优雅的无虚拟 DOM 架构。', url: 'https://svelte.dev', category: 'dev', icon: 'cycle', tone: 'blue' }
+          { id: 'react', name: 'React', description: '用于构建现代 Web 响应式交互界面的渐进式组件化库。', url: 'https://react.dev', category: 'dev', icon: 'codeBlocks', tone: 'theme' },
+          { id: 'vue', name: 'Vue.js', description: '易学易用、性能卓越且全能灵活的渐进式 JavaScript 框架。', url: 'https://vuejs.org', category: 'dev', icon: 'viewQuilt', tone: 'theme' },
+          { id: 'nextjs', name: 'Next.js', description: 'Vercel 推出的全栈 React 框架，提供极速 SSR 与服务端组件支持。', url: 'https://nextjs.org', category: 'dev', icon: 'bolt', tone: 'theme' },
+          { id: 'svelte', name: 'Svelte', description: '零运行时开销的前端编译器，提供简洁优雅的无虚拟 DOM 架构。', url: 'https://svelte.dev', category: 'dev', icon: 'cycle', tone: 'theme' }
         ] }
       ] },
       { id: 'backend', title: '后端与云原生架构', icon: 'dns', children: [
         { id: 'microservices', title: '微服务与分布式运行时', icon: 'hub', children: [
           { id: 'runtimes', title: '核心语言运行时与微框架', icon: 'code', sites: [
-            { id: 'golang', name: 'Golang', description: '具备高并发天生优势的静态类型编译语言，云原生基础工程基石。', url: 'https://go.dev', category: 'dev', icon: 'terminal', tone: 'blue' },
-            { id: 'spring', name: 'Spring Boot', description: '企业级 Java 微服务主流开发标准，全自动化配置与生产级支撑。', url: 'https://spring.io/projects/spring-boot', category: 'dev', icon: 'spa', tone: 'blue' },
-            { id: 'fastapi', name: 'FastAPI', description: '基于 Python 现代类型提示的高性能 Web 框架，开箱即用 Swagger 文档。', url: 'https://fastapi.tiangolo.com', category: 'dev', icon: 'speed', tone: 'blue' },
-            { id: 'nodejs', name: 'Node.js', description: '基于 V8 引擎的高并发异步事件驱动 JavaScript 运行时。', url: 'https://nodejs.org', category: 'dev', icon: 'hexagon', tone: 'blue' }
+            { id: 'golang', name: 'Golang', description: '具备高并发天生优势的静态类型编译语言，云原生基础工程基石。', url: 'https://go.dev', category: 'dev', icon: 'terminal', tone: 'theme' },
+            { id: 'spring', name: 'Spring Boot', description: '企业级 Java 微服务主流开发标准，全自动化配置与生产级支撑。', url: 'https://spring.io/projects/spring-boot', category: 'dev', icon: 'spa', tone: 'theme' },
+            { id: 'fastapi', name: 'FastAPI', description: '基于 Python 现代类型提示的高性能 Web 框架，开箱即用 Swagger 文档。', url: 'https://fastapi.tiangolo.com', category: 'dev', icon: 'speed', tone: 'theme' },
+            { id: 'nodejs', name: 'Node.js', description: '基于 V8 引擎的高并发异步事件驱动 JavaScript 运行时。', url: 'https://nodejs.org', category: 'dev', icon: 'hexagon', tone: 'theme' }
           ] },
           { id: 'containers', title: '容器化与集群编排调度', sites: [
-            { id: 'kubernetes', name: 'Kubernetes', description: '生产级自动化容器编排管理系统，支持大规模集群部署与自愈伸缩。', url: 'https://kubernetes.io', category: 'dev', icon: 'anchor', tone: 'blue' },
-            { id: 'docker', name: 'Docker', description: '行业事实标准的应用程序容器化打包与轻量级环境隔离方案。', url: 'https://www.docker.com', category: 'dev', icon: 'deployedCode', tone: 'blue' },
-            { id: 'terraform', name: 'Terraform', description: '声明式基础设施即代码（IaC）平台，安全可靠地编排多云资源。', url: 'https://developer.hashicorp.com/terraform', category: 'dev', icon: 'accountTree', tone: 'blue' },
-            { id: 'istio', name: 'Istio', description: '开源服务网格层，提供分布式微服务流量调度、双向 TLS 与全景监控。', url: 'https://istio.io', category: 'dev', icon: 'hub', tone: 'blue' }
+            { id: 'kubernetes', name: 'Kubernetes', description: '生产级自动化容器编排管理系统，支持大规模集群部署与自愈伸缩。', url: 'https://kubernetes.io', category: 'dev', icon: 'anchor', tone: 'theme' },
+            { id: 'docker', name: 'Docker', description: '行业事实标准的应用程序容器化打包与轻量级环境隔离方案。', url: 'https://www.docker.com', category: 'dev', icon: 'deployedCode', tone: 'theme' },
+            { id: 'terraform', name: 'Terraform', description: '声明式基础设施即代码（IaC）平台，安全可靠地编排多云资源。', url: 'https://developer.hashicorp.com/terraform', category: 'dev', icon: 'accountTree', tone: 'theme' },
+            { id: 'istio', name: 'Istio', description: '开源服务网格层，提供分布式微服务流量调度、双向 TLS 与全景监控。', url: 'https://istio.io', category: 'dev', icon: 'hub', tone: 'theme' }
           ] }
         ] }
       ] },
       { id: 'devops', title: 'DevOps 与研发效能', sites: [
-        { id: 'github-actions', name: 'GitHub Actions', description: '开箱即用的代码仓库持续集成与自动化流水线分发平台。', url: 'https://github.com/features/actions', category: 'dev', icon: 'terminal', tone: 'blue' },
-        { id: 'gitlab', name: 'GitLab', description: '覆盖项目规划、代码管理与安全治理的全生命周期 DevSecOps 平台。', url: 'https://gitlab.com', category: 'dev', icon: 'sourceNotes', tone: 'blue' },
-        { id: 'sentry', name: 'Sentry', description: '面向全栈应用的代码级实时异常捕获与性能追踪观测平台。', url: 'https://sentry.io', category: 'dev', icon: 'bugReport', tone: 'blue' },
-        { id: 'postman', name: 'Postman', description: '行业通用的 API 协作平台，简化接口设计、Mock 模拟与自动化测试。', url: 'https://www.postman.com', category: 'dev', icon: 'api', tone: 'blue' }
+        { id: 'github-actions', name: 'GitHub Actions', description: '开箱即用的代码仓库持续集成与自动化流水线分发平台。', url: 'https://github.com/features/actions', category: 'dev', icon: 'terminal', tone: 'theme' },
+        { id: 'gitlab', name: 'GitLab', description: '覆盖项目规划、代码管理与安全治理的全生命周期 DevSecOps 平台。', url: 'https://gitlab.com', category: 'dev', icon: 'sourceNotes', tone: 'theme' },
+        { id: 'sentry', name: 'Sentry', description: '面向全栈应用的代码级实时异常捕获与性能追踪观测平台。', url: 'https://sentry.io', category: 'dev', icon: 'bugReport', tone: 'theme' },
+        { id: 'postman', name: 'Postman', description: '行业通用的 API 协作平台，简化接口设计、Mock 模拟与自动化测试。', url: 'https://www.postman.com', category: 'dev', icon: 'api', tone: 'theme' }
       ] }
     ]
   }

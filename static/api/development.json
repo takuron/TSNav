@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "scope": "default",
+  "slug": "development",
+  "category": {
+    "label": "开发与云原生",
+    "title": "开发技术与基础架构",
+    "description": "开发、云原生和工程效率工具",
+    "icon": "md://terminal",
+    "links": [
+      {
+        "name": "GitHub",
+        "description": "代码托管和协作平台",
+        "url": "https://github.com",
+        "icon": "icon://github",
+        "tone": "theme",
+        "badge": "常用"
+      }
+    ],
+    "children": [
+      {
+        "id": "frontend",
+        "title": "前端与客户端架构",
+        "icon": "md://devices",
+        "links": [
+          {
+            "name": "Svelte",
+            "description": "现代前端编译器",
+            "url": "https://svelte.dev",
+            "icon": "md://cycle",
+            "tone": "default"
+          }
+        ],
+        "children": []
+      }
+    ]
+  }
+}

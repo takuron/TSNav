@@ -242,9 +242,7 @@
   .site-card:hover { background: var(--md-sys-color-surface-container-low); transform: translateY(-2px); box-shadow: 0 4px 12px color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent); }
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
   .site-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); }
-  .site-icon.blue { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-primary); }
-  .site-icon.accent { background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-tertiary); }
-  .site-icon.primary { color: var(--md-sys-color-primary); }
+  .site-icon.theme { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
   .card-arrow { opacity: 0; color: var(--md-sys-color-primary); transition: opacity 150ms ease; }
   .site-card:hover .card-arrow, .site-card:focus-visible .card-arrow { opacity: 1; }
   .card-copy .card-title { margin: 0 0 4px; font-size: 16px; font-weight: 600; line-height: 24px; white-space: normal; overflow-wrap: anywhere; letter-spacing: .1px; }

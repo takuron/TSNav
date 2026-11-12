@@ -12,14 +12,14 @@
 
   const destinations = navigationCategories;
   const shortcuts: NavigationSite[] = [
-    { id: 'github', name: 'GitHub', description: '全球最大的开源代码托管与协作平台', url: 'https://github.com', category: 'dev', icon: 'github', tone: 'neutral' },
-    { id: 'claude', name: 'Claude / ChatGPT', description: '前沿对话大模型协同与推理引擎', url: 'https://claude.ai', category: 'ai', icon: 'psychology', tone: 'blue' },
-    { id: 'figma', name: 'Figma Design', description: '下一代云端 UI/UX 协作与原型设计器', url: 'https://figma.com', category: 'design', icon: 'figma', tone: 'accent' },
-    { id: 'vercel', name: 'Vercel', description: '极速前端全栈托管与边缘计算网络', url: 'https://vercel.com', category: 'dev', icon: 'vercel', tone: 'neutral' },
-    { id: 'notion', name: 'Notion', description: '结构化文档、团队知识库与多维表格', url: 'https://www.notion.so', category: 'dev', icon: 'note', tone: 'neutral' },
-    { id: 'bilibili', name: '哔哩哔哩 / YouTube', description: '优质技术视频教程与全球创意内容', url: 'https://www.bilibili.com', category: 'discover', icon: 'video', tone: 'blue' },
-    { id: 'stackoverflow', name: 'Stack Overflow', description: '全球最大的专业软件开发疑难解答社区', url: 'https://stackoverflow.com', category: 'dev', icon: 'quiz', tone: 'primary' },
-    { id: 'dribbble', name: 'Dribbble & Behance', description: '全球顶尖数字产品 UI 与插画艺术灵感', url: 'https://dribbble.com', category: 'design', icon: 'palette', tone: 'primary' }
+    { id: 'github', name: 'GitHub', description: '全球最大的开源代码托管与协作平台', url: 'https://github.com', category: 'dev', icon: 'github', tone: 'default' },
+    { id: 'claude', name: 'Claude / ChatGPT', description: '前沿对话大模型协同与推理引擎', url: 'https://claude.ai', category: 'ai', icon: 'psychology', tone: 'theme' },
+    { id: 'figma', name: 'Figma Design', description: '下一代云端 UI/UX 协作与原型设计器', url: 'https://figma.com', category: 'design', icon: 'figma', tone: 'theme' },
+    { id: 'vercel', name: 'Vercel', description: '极速前端全栈托管与边缘计算网络', url: 'https://vercel.com', category: 'dev', icon: 'vercel', tone: 'default' },
+    { id: 'notion', name: 'Notion', description: '结构化文档、团队知识库与多维表格', url: 'https://www.notion.so', category: 'dev', icon: 'note', tone: 'default' },
+    { id: 'bilibili', name: '哔哩哔哩 / YouTube', description: '优质技术视频教程与全球创意内容', url: 'https://www.bilibili.com', category: 'discover', icon: 'video', tone: 'theme' },
+    { id: 'stackoverflow', name: 'Stack Overflow', description: '全球最大的专业软件开发疑难解答社区', url: 'https://stackoverflow.com', category: 'dev', icon: 'quiz', tone: 'theme' },
+    { id: 'dribbble', name: 'Dribbble & Behance', description: '全球顶尖数字产品 UI 与插画艺术灵感', url: 'https://dribbble.com', category: 'design', icon: 'palette', tone: 'theme' }
   ];
   // 从分类页返回本地筛选时，使用稳定 ID 初始化，不以显示名判定。
   function initialCategory() {
