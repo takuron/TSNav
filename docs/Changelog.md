@@ -47,7 +47,7 @@ tests/                        生产预览浏览器集成测试
 
 主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。旧的 `data/sites.ts` 示例暂保留但不再驱动主页。
 
-`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有，默认收起并通过 localStorage 持久化，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
+`selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有且默认收起，并通过 `localStorage` 记忆，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
 
 站点采用静态可信 HTTPS 链接。当前没有远程 API、数据库或账户系统；侧栏显示本地访客。死链反馈仅展示原型说明与站点信息复制，不提交数据。仅语言偏好通过 tsnav_locale Cookie 持久化。
 
@@ -69,7 +69,7 @@ tests/                        生产预览浏览器集成测试
 
 ## 主页组件接口
 
-- `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 false）和 `onselect` / `ontoggle` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定推荐入口。
+- `Sidebar`：接收只读 `NavigationCategory[]`、`selected`、`collapsed`（默认 true）和 `onselect` / `ontoggle` 回调；组件自身管理移动抽屉，并在可定制分类前渲染固定推荐入口。
 - `NavigationCard`：主页和分类页共用同一张卡片，接收 `NavigationSite`、可选 `onvisit(id)` 和 `headingLevel`（默认 2）。访问图标默认隐藏，仅悬停或键盘焦点显示；说明固定为最多两行并省略；直接输出 静态外链。`NavigationCardGrid` 负责按实际容器宽度使用 1 / 2 / 3 / 4 列；主页最多 5 列并限制主网格宽度，分类分组达到 5 张卡片时切换按最小卡片宽度自动流式换列。
 - `SearchBar`：无外部 props，独立管理五个搜索引擎和查询。原生 form 提交触发搜索，空白查询不打开窗口；有内容时显示 ×，清空后恢复输入焦点。输入法组合期间不提交。引擎图标统一 16px；搜索面板内容宽度不超过 600px 时通过 CSS 容器查询只显示当前引擎按钮，完全复用宽屏按钮的样式。点击后打开官方 `md-menu` 顶层浮层，使用 `md-menu-item` 和 `close-menu` 事件统一处理点击与键盘选择，与宽屏共用 `engineId` 状态。菜单关闭后恢复触发按钮焦点，进入宽屏隐藏触发按钮时通过 ResizeObserver 关闭浮层；跨断点保留引擎和查询。
 - `Footer`：接收只读 `sites`，自身管理反馈选择、复制状态与返回顶部；没有站点时禁用反馈入口。

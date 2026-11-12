@@ -206,7 +206,7 @@
   .profile-info strong { font-size: 13px; font-weight: 600; }
   .profile-info span { font-size: 11px; color: var(--md-sys-color-on-surface-variant); }
   .settings-button { width: 30px; height: 30px; }
-  /* 仅压缩桌面固定侧栏；移动抽屉位于同一 portal 内，不能继承桌面折叠样式。 */
+  /* 折叠只影响桌面固定侧栏，不能污染同一组件输出的移动抽屉。 */
   .collapsed > .sidebar .sidebar-text, .collapsed > .sidebar .brand { display: none; }
   .collapsed > .sidebar .sidebar-heading { justify-content: center; }
   .collapsed > .sidebar .destination { padding: 0; justify-content: center; }

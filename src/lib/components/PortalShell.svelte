@@ -21,13 +21,14 @@
     /** 页面主内容。 */
     children: Snippet;
   } = $props();
+  // 所有使用统一页面模板的入口默认使用收起侧栏，避免路由间出现不同初始布局。
   const sidebarPreferenceKey = 'tsnav.sidebar.collapsed';
   let collapsed = $state(true);
 
   onMount(() => {
     const saved = localStorage.getItem(sidebarPreferenceKey);
-    if (saved === 'false') collapsed = false;
     if (saved === 'true') collapsed = true;
+    if (saved === 'false') collapsed = false;
   });
 
   function toggleSidebar() {
