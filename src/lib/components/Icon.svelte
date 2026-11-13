@@ -1,6 +1,6 @@
 <script lang="ts">
   // 将受信任的本地图标数据渲染为 SSR 可见的内联 SVG，不调用在线 API。
-  import { brandColors, icons, localBrandAssets, simpleIconCache, simpleIconCdnUrl, type IconName } from '#lib/icons/index.ts';
+  import { brandColors, icons, localBrandAssets, otherIconCache, simpleIconCache, simpleIconCdnUrl, type IconName } from '#lib/icons/index.ts';
   let { name, size = 24, label, class: className = '', brandColor = false }: {
     /** 注册表中的图标名称。 */
     name: IconName;
@@ -14,7 +14,7 @@
     brandColor?: boolean;
   } = $props();
   const icon = $derived(icons[name]);
-  const localAsset = $derived(localBrandAssets[name as string] ?? simpleIconCache[name as string]);
+  const localAsset = $derived(localBrandAssets[name as string] ?? simpleIconCache[name as string] ?? otherIconCache[name as string]);
   const onlineAsset = $derived(!icon && !localAsset ? simpleIconCdnUrl(name as string) : undefined);
   const iconColor = $derived(brandColor ? brandColors[name as keyof typeof brandColors] : undefined);
 </script>

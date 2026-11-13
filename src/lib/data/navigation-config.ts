@@ -9,7 +9,7 @@ const master = defaultMaster as MasterConfig;
 const development = defaultCategory as CategoryConfig;
 
 function iconName(value: string): IconName {
-  const id = value.startsWith('md://') || value.startsWith('icon://') ? value.slice(value.indexOf('://') + 3) : value.includes('weibo') ? 'weibo' : value.includes('baidutieba') ? 'baidutieba' : value.includes('zhihu') ? 'zhihu' : value.includes('bilibili') ? 'bilibili' : value.includes('iqiyi') ? 'iqiyi' : value.includes('neteasecloudmusic') ? 'neteasecloudmusic' : value.includes('/qq') ? 'qq' : value.includes('deepseek') ? 'deepseek' : 'link';
+  const id = value.startsWith('md://') || value.startsWith('simple://') || value.startsWith('icon://') ? value.slice(value.indexOf('://') + 3) : value.includes('weibo') ? 'sinaweibo' : value.includes('baidutieba') ? 'baiduTieba' : value.includes('zhihu') ? 'zhihu' : value.includes('bilibili') ? 'bilibili' : value.includes('iqiyi') ? 'iqiyi' : value.includes('neteasecloudmusic') ? 'neteasecloudmusic' : value.includes('/qq') ? 'qqMail' : value.includes('deepseek') ? 'deepseek' : 'link';
   return id as IconName;
 }
 

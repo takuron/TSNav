@@ -5,7 +5,8 @@ const VERSION = 1;
 const MAX_CHILDREN_DEPTH = 3;
 const HTTPS_URL = /^https:\/\//;
 const CATEGORY_ICON = /^md:\/\/[A-Za-z0-9_-]+$/;
-const SITE_ICON = /^(md|icon):\/\/[A-Za-z0-9_-]+$|^https:\/\//;
+const SITE_ICON = /^(md|simple|icon):\/\/[A-Za-z0-9_-]+$|^https:\/\//;
+const OTHER_ICON_IDS = new Set(['baiduTieba', 'iqiyi', 'neteaseMail']);
 
 interface ValidationIssue {
   path: string;
@@ -29,7 +30,10 @@ function validateLink(value: unknown, path: string, issues: ValidationIssue[]): 
     if (typeof value[field] !== 'string' || value[field].length === 0) issue(issues, `${path}.${field}`, '必须是非空字符串');
   }
   if (typeof value.url === 'string' && !HTTPS_URL.test(value.url)) issue(issues, `${path}.url`, '必须使用 https://');
-  if (typeof value.icon === 'string' && !SITE_ICON.test(value.icon)) issue(issues, `${path}.icon`, '必须是 md://、icon:// 或 https://');
+  if (typeof value.icon === 'string') {
+    if (!SITE_ICON.test(value.icon)) issue(issues, `${path}.icon`, '必须是 md://、simple://、icon:// 或 https://');
+    else if (value.icon.startsWith('icon://') && !OTHER_ICON_IDS.has(value.icon.slice(7))) issue(issues, `${path}.icon`, 'icon:// 只能使用已注册的本地图标 ID');
+  }
 }
 
 function validateGroup(value: unknown, path: string, depth: number, issues: ValidationIssue[]): void {

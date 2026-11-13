@@ -19,61 +19,61 @@
         "name": "微博",
         "description": "记录和分享生活的中文社交平台",
         "url": "https://weibo.com",
-        "icon": "icon://sinaweibo"
+        "icon": "simple://sinaweibo"
       },
       {
         "name": "百度贴吧",
         "description": "基于兴趣主题的中文社区交流平台",
         "url": "https://tieba.baidu.com",
-        "icon": "https://api.iconify.design/arcticons:baidu-tieba"
+        "icon": "icon://baiduTieba"
       },
       {
         "name": "知乎",
         "description": "中文知识问答与交流社区",
         "url": "https://www.zhihu.com",
-        "icon": "icon://zhihu"
+        "icon": "simple://zhihu"
       },
       {
         "name": "Bilibili",
         "description": "综合视频与创意内容平台",
         "url": "https://www.bilibili.com",
-        "icon": "icon://bilibili"
+        "icon": "simple://bilibili"
       },
       {
         "name": "爱奇艺",
         "description": "在线视频和影视内容平台",
         "url": "https://www.iqiyi.com",
-        "icon": "https://api.iconify.design/logos:iqiyi.svg"
+        "icon": "icon://iqiyi"
       },
       {
         "name": "网易邮箱",
         "description": "网易提供的电子邮件服务",
         "url": "https://mail.163.com",
-        "icon": "https://api.iconify.design/logos:netease.svg"
+        "icon": "icon://neteaseMail"
       },
       {
         "name": "QQ邮箱",
         "description": "腾讯提供的电子邮件服务",
         "url": "https://mail.qq.com",
-        "icon": "https://api.iconify.design/logos:qq.svg"
+        "icon": "simple://qq"
       },
       {
         "name": "网易云音乐",
         "description": "音乐发现与在线音乐服务",
         "url": "https://music.163.com",
-        "icon": "icon://neteasecloudmusic"
+        "icon": "simple://neteasecloudmusic"
       },
       {
         "name": "DeepSeek",
         "description": "深度求索人工智能服务",
         "url": "https://www.deepseek.com",
-        "icon": "icon://deepseek"
+        "icon": "simple://deepseek"
       },
       {
         "name": "GitHub",
         "description": "全球最大的开源代码托管与协作平台",
         "url": "https://github.com",
-        "icon": "icon://github"
+        "icon": "simple://github"
       }
     ]
   },

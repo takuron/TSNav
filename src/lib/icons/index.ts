@@ -46,6 +46,7 @@ import language from '@iconify-icons/material-symbols/language-rounded';
 import favorite from '@iconify-icons/material-symbols/favorite-rounded';
 import folder from '@iconify-icons/material-symbols/folder-rounded';
 import link from '@iconify-icons/material-symbols/link-rounded';
+import mail from '@iconify-icons/material-symbols/mail-rounded';
 import github from '@iconify-icons/simple-icons/github';
 import svelte from '@iconify-icons/simple-icons/svelte';
 import cloudflare from '@iconify-icons/simple-icons/cloudflare';
@@ -57,9 +58,11 @@ import youtube from '@iconify-icons/simple-icons/youtube';
 import wikipedia from '@iconify-icons/simple-icons/wikipedia';
 import stackoverflow from '@iconify-icons/simple-icons/stackoverflow';
 import baidu from '@iconify-icons/simple-icons/baidu';
+import { simpleIconCache } from './simpleicon-cache.ts';
+import { otherIconCache } from './other-cache.ts';
 
 /** Google Material Symbols Rounded：仅静态导入项目需要的官方图形。 */
-export const materialIcons = { devices, dns, hub, code, codeBlocks, viewQuilt, bolt, cycle, spa, speed, hexagon, anchor, deployedCode, accountTree, sourceNotes, bugReport, api, check, search, openInNew, menu, close, home, settings, lightMode, darkMode, language, favorite, folder, link, star, gridView, sparkles, terminal, palette, history, collapse, psychology, note, video, quiz, arrowUp, feedback, explore };
+export const materialIcons = { devices, dns, hub, code, codeBlocks, viewQuilt, bolt, cycle, spa, speed, hexagon, anchor, deployedCode, accountTree, sourceNotes, bugReport, api, check, search, openInNew, menu, close, home, settings, lightMode, darkMode, language, favorite, folder, link, mail, star, gridView, sparkles, terminal, palette, history, collapse, psychology, note, video, quiz, arrowUp, feedback, explore };
 
 /** Simple Icons 品牌图形，统一单色并继承主题颜色。 */
 export const brandIcons = { github, svelte, cloudflare, materialdesign, figma, mdnwebdocs, google, youtube, wikipedia, stackoverflow, vercel, baidu, microsoftbing, sogou, duckduckgo };
@@ -73,6 +76,7 @@ export const brandColors: Partial<Record<keyof typeof brandIcons, string>> = {
 export const localBrandAssets: Record<string, string> = {};
 
 export { simpleIconCache } from './simpleicon-cache.ts';
+export { otherIconCache } from './other-cache.ts';
 
 /** 将未缓存的 Simple Icons 标识转换为官方 CDN 地址。 */
 export function simpleIconCdnUrl(id: string): string {
@@ -86,11 +90,18 @@ export const icons = { ...materialIcons, ...brandIcons };
 export type IconName = keyof typeof icons;
 
 /** 图标来源标记；Material 和项目登记的常用 Simple Icons 永远从本地缓存读取。 */
-export type IconSource = 'material-local' | 'simple-local' | 'simple-online' | 'image-online';
+export type IconSource = 'material-local' | 'simple-local' | 'simple-online' | 'icon-local' | 'image-online';
 
 /** 根据配置 URI 判断图标缓存来源；在线来源只作为后续受控加载的标记。 */
 export function iconSource(value: string): IconSource {
   if (value.startsWith('md://')) return 'material-local';
-  if (value.startsWith('icon://')) return Object.prototype.hasOwnProperty.call(brandIcons, value.slice(7)) ? 'simple-local' : 'simple-online';
+  if (value.startsWith('simple://')) {
+    const id = value.slice(9);
+    return Object.prototype.hasOwnProperty.call(simpleIconCache, id) || Object.prototype.hasOwnProperty.call(brandIcons, id) ? 'simple-local' : 'simple-online';
+  }
+  if (value.startsWith('icon://')) {
+    const id = value.slice(7);
+    return Object.prototype.hasOwnProperty.call(otherIconCache, id) ? 'icon-local' : 'image-online';
+  }
   return value.startsWith('https://') ? 'image-online' : 'image-online';
 }

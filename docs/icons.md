@@ -17,7 +17,7 @@
 
 新增图标在注册表静态导入具体子路径。数据包的 exports 不带 .js；项目自身 #lib 导入仍使用显式扩展名。注册表内的图标会随应用打包，保持有限集合，不把整个包动态加载进客户端。
 
-配置文件的 icon 字段保存 `md://{id}`、`icon://{id}` 或受限的 `https://` 图片地址。所有已使用的 Material 图标由 `@iconify-icons/material-symbols` 静态导入并随应用本地缓存；项目登记的常见 Simple Icons 也静态导入，本地优先。未登记的 `icon://{id}` 由 `iconSource()` 标记为 `simple-online`，交给后续受控在线加载逻辑；不允许把未信任的 SVG 直接交给 `{@html}`。
+配置文件的 icon 字段保存 `md://{id}`、`simple://{id}`、`icon://{id}` 或受限的 `https://` 图片地址。`simple://` 专门引用 Simple Icons：`src/lib/icons/simpleicon/` 目前内置 61 个常见 SVG，本地缓存优先，未缓存时回退到 `cdn.simpleicons.org`。`icon://` 只引用 `src/lib/icons/other/` 中已注册的其他本地图标，不允许在线回退；不允许把未信任的 SVG 直接交给 `{@html}`。
 
 图标 ID 查询页面：
 
@@ -25,7 +25,7 @@
 - Simple Icons：[Simple Icons 图标目录](https://simpleicons.org/)
 - Simple Icons 图标数据：[Simple Icons GitHub](https://github.com/simple-icons/simple-icons/tree/develop/data/icons)
 
-查询到的 Material 名称去掉空格并转换为项目注册表 ID，例如 `code blocks` 对应 `md://codeBlocks`；Simple Icons 使用目录中的 slug，例如 GitHub 对应 `icon://github`。当前注册表中的 Material 图标全部本地缓存，Simple Icons 注册表维护常用品牌的本地缓存，未缓存品牌才允许在线获取。
+查询到的 Material 名称去掉空格并转换为项目注册表 ID，例如 `code blocks` 对应 `md://codeBlocks`；Simple Icons 使用目录中的 slug，例如 GitHub 对应 `simple://github`。`icon://` 只使用 `other-cache.ts` 中存在的 ID。
 
 ## 来源与许可
 
@@ -35,6 +35,10 @@
 ## 搜索引擎图标
 
 `SearchBar.svelte` 统一使用 Simple Icons 的 `google`、`baidu`、`microsoftbing`、`sogou`、`duckduckgo` 品牌 SVG，替换早期字母和通用搜索图形。它们由现有锁定依赖静态导入注册表，通过 `Icon.svelte` 以 16px 渲染并继承主题颜色，不请求远程 favicon。
+
+主页常用链接的三个非 Simple Icons 品牌图标使用 `icon://` 引用 `src/lib/icons/other/` 中的本地 SVG；QQ 邮箱复用 `simple://qq`。Simple Icons 品牌统一使用 `simple://`。链接目标仍由 `master.json` 中的 HTTPS 地址单独控制。
+
+百度贴吧、爱奇艺和网易邮箱另有本地 SVG 缓存，位于 `src/lib/icons/other/`，来源为 Iconify Arcticons（CC BY-SA 4.0）。当前使用加粗线条并写入品牌主色：贴吧 `#6276B9`、爱奇艺 `#00DC5A`、网易邮箱 `#EC2628`；缓存通过 `other-cache.ts` 静态内联，不请求运行时 CDN。Arcticons 没有现成的彩色粗线版本，因此颜色和线宽是在本地 SVG 外壳上统一应用的。
 
 来源：[Simple Icons](https://github.com/simple-icons/simple-icons)，通过当前 `@iconify-icons/simple-icons` 包获取；许可沿用 `licenses/simple-icons.md`。
 

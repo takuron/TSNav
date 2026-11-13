@@ -109,7 +109,7 @@ static/api/user/{uuid}/{slug}.json      -> /api/user/{uuid}/{slug}.json
   "name": "GitHub",
   "description": "代码托管和协作平台",
   "url": "https://github.com",
-  "icon": "icon://github",
+  "icon": "simple://github",
   "badge": "常用"
 }
 ```
@@ -128,12 +128,14 @@ md://{id}
 
 ```text
 md://{id}
+simple://{id}
 icon://{id}
 https://...
 ```
 
 - `md://{id}`：Material Design 图标，全部预载入项目。
-- `icon://{id}`：Simple Icons，常见图标预载；不常见图标由图标解析器在线获取。
+- `simple://{id}`：Simple Icons，常见图标优先使用本地缓存，未缓存时回退到 `cdn.simpleicons.org`。
+- `icon://{id}`：项目 `icons/other` 中的其他本地图标，只允许使用已注册的 ID，不回退到在线地址。
 - `https://...`：在线 PNG、JPG/JPEG 或 SVG 图片。
 
 分类图标不得使用 `icon://` 或在线图片。所有站点链接必须使用 `https://`。解析器必须拒绝 `http://`、`javascript:`、`data:` 等协议；在线图片还应校验允许的图片 MIME 类型。

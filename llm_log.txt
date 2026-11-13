@@ -43,3 +43,11 @@
 [2026-11-12T21:40:54+08:00] 建立 src 内置 Simple Icons SVG 缓存，icon:// 先查本地缓存，未命中再回退官方 CDN。
 [2026-11-12T21:56:35+08:00] 核对 Simple Icons 官方 slug：微博改为 sinaweibo，并将本地 SVG 缓存统一使用官方 slug。
 [2026-11-12T22:03:01+08:00] 为 Simple Icons 不收录的百度贴吧、爱奇艺、网易邮箱和 QQ 邮箱改用 Iconify Logos CDN，并校正微博为官方 sinaweibo slug。
+[2026-11-13T09:07:31+08:00] 扩展 Simple Icons 本地缓存，新增 54 个常见品牌并保留官方配色；缓存来源判断覆盖新增图标。
+[2026-11-13T09:15:04+08:00] 将 master.json 中四个第三方 Iconify 图标地址改为对应站点官方域名的 favicon.ico 兜底；保留站点链接目标不变。
+[2026-11-13T09:17:50+08:00] 恢复主页常用链接的本地图标方案：百度贴吧和 QQ 邮箱使用本地品牌图标，爱奇艺与网易邮箱使用本地 Material 图标，移除站点 favicon 依赖。
+[2026-11-13T09:22:21+08:00] 新增 four 个 Arcticons 开源 SVG 到 src/lib/icons/other，并接入 otherIconCache；主页四个品牌图标改用本地缓存。
+[2026-11-13T09:26:00+08:00] 统一图标引用协议：Simple Icons 使用 simple:// 并本地优先回退 CDN，other 图标使用严格注册的 icon://；同步 JSON、校验逻辑与文档。
+[2026-11-13T09:28:31+08:00] 为四个 other SVG 应用品牌主色并统一加粗线宽：贴吧、爱奇艺、网易邮箱、QQ 邮箱；同步图标文档和许可说明。
+[2026-11-13T09:34:50+08:00] 调整四个 other 品牌 SVG 为更粗的 3px 线条，保留官方品牌色和 Arcticons 开源来源；未采用下载受限的来源不明重绘版本。
+[2026-11-13T09:41:28+08:00] QQ 邮箱改用现有 Simple Icons simple://qq，删除独立 qq-mail SVG 及 other 缓存注册。
