@@ -52,3 +52,8 @@
 [2026-11-13T09:34:50+08:00] 调整四个 other 品牌 SVG 为更粗的 3px 线条，保留官方品牌色和 Arcticons 开源来源；未采用下载受限的来源不明重绘版本。
 [2026-11-13T09:41:28+08:00] QQ 邮箱改用现有 Simple Icons simple://qq，删除独立 qq-mail SVG 及 other 缓存注册。
 [2026-11-13T19:59:50+08:00] 修复 pnpm-lock.yaml 快照引用损坏并清理残留传递依赖，将 @sveltejs/adapter-static 升级至适配 SvelteKit 3 的 4.0.1 以消除 peer 冲突与构建弃用警告。pnpm peers check、--frozen-lockfile --offline、check 及 build 均通过。
+[2026-11-13T21:46:50+08:00] 将导航 JSON 配置源迁移到 src/api，新增 Vite 原样发布到 /api 的开发与构建映射，并继续执行构建期结构校验；默认配置改为从 src/api 加载。
+[2026-11-13T21:51:09+08:00] 重构导航配置数据模型：由 NavigationConfig 统一管理编译期 glob 导入、master 注册表、分类 URL 加载和路径生成；navigation-config 按 master.categories 动态生成所有分类页面；保留 categories.ts 为兼容出口并移除硬编码分类数据。
+[2026-11-13T21:51:49+08:00] 完成配置模型重构后的类型检查与构建验证。
+[2026-11-13T21:55:20+08:00] 清理旧版静态站点数据和 NavigationConfig 类，将配置原始数据、编译期索引、URL 加载与界面适配拆分为独立模块；保留无数据的迁移期 API 转发。
+[2026-11-13T22:00:52+08:00] 收窄配置编译期 glob 到 src/api 顶层默认 JSON，避免未来 user UUID 配置进入首屏 bundle 或因语法错误中断 Vite 编译。

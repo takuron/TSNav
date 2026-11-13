@@ -1,14 +1,14 @@
 # JSON 导航配置规范
 
-TSNav 使用多文件 JSON 保存默认导航和特定用户导航。配置源文件位于 `static/api/`，静态构建后会原样发布到网站对应的 `/api/` 路径。
+TSNav 使用多文件 JSON 保存默认导航和特定用户导航。配置源文件位于 `src/api/`，构建时会校验并原样发布到网站对应的 `/api/` 路径。
 
 ## 文件布局
 
 ```text
-static/api/master.json                  -> /api/master.json
-static/api/{slug}.json                  -> /api/{slug}.json
-static/api/user/{uuid}/master.json      -> /api/user/{uuid}/master.json
-static/api/user/{uuid}/{slug}.json      -> /api/user/{uuid}/{slug}.json
+src/api/master.json                     -> /api/master.json
+src/api/{slug}.json                     -> /api/{slug}.json
+src/api/user/{uuid}/master.json         -> /api/user/{uuid}/master.json
+src/api/user/{uuid}/{slug}.json         -> /api/user/{uuid}/{slug}.json
 ```
 
 `{uuid}` 使用标准 36 位 UUID。默认配置的 `scope` 为 `default`，用户配置的 `scope` 为 `user`。
@@ -142,15 +142,15 @@ https://...
 
 ## 构建与代码加载
 
-默认 `master.json` 由 [NavigationConfig](../src/lib/data/config.ts) 在构建时预载入代码。该类提供默认分类路径、用户 `master.json` 路径和用户分类文件路径：
+默认 `master.json` 由 [config-loader](../src/lib/data/config-loader.ts) 在构建时预载入。该模块提供默认分类索引、用户 `master.json` 路径和用户分类文件路径：
 
 ```ts
-navigationConfig.defaultMaster;
-navigationConfig.categoryPath('development');
-navigationConfig.userMasterPath(uuid);
-navigationConfig.userCategoryPath(uuid, slug);
+compiledNavigationConfig.master;
+categoryPath('development');
+userMasterPath(uuid);
+userCategoryPath(uuid, slug);
 ```
 
-静态文件由 SvelteKit adapter-static 原样复制到 `build/api/`，因此 `static/api/{file}.json` 与发布后的 `/api/{file}.json` 保持一致。
+Vite 插件将 `src/api/**/*.json` 原样输出到 `build/api/`，因此源文件与发布后的 `/api/{file}.json` 保持一致；开发服务器也提供相同的 URL。
 
-Vite 构建开始时会扫描 `static/api/**/*.json` 并执行结构校验。所有文件都必须使用 `version: 1`；默认配置文件校验失败会终止构建，用户配置文件校验失败只输出 warning。JSON 会先被解析和校验，再进入构建流程，避免版本或结构异常的内容被直接使用。
+Vite 构建开始时会扫描 `src/api/**/*.json` 并执行结构校验。编译期只导入顶层默认配置 `src/api/*.json`；`src/api/user/{uuid}/` 下的用户配置不会进入前端 bundle，只能通过 URL 按需读取。所有文件都必须使用 `version: 1`；默认配置文件校验失败会终止构建，用户配置文件校验失败只输出 warning。JSON 会先被解析和校验，再进入构建流程，避免版本或结构异常的内容被直接使用。代码中需要导入配置时从 `src/api/development.json` 导入；需要 URL 时使用 `/api/development.json?url`。

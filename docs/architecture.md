@@ -26,7 +26,8 @@ src/
     components/NavigationCard.svelte 单张站点卡片
     components/SearchBar.svelte 五引擎搜索、输入与清空
     types/navigation.ts        分类与站点组件的共享类型
-    data/categories.ts        分类注册表、递归分组及路由解析
+    data/config.ts             编译期与 URL 配置加载及路径模型
+    data/navigation-config.ts  配置到界面显示模型的适配
     copy.ts                    单语言界面文案
     material/register.ts       仅浏览器执行的按需组件注册
     material/elements.d.ts     Svelte 自定义元素属性和事件类型
@@ -44,7 +45,7 @@ tests/                        生产预览浏览器集成测试
 
 ## 状态与数据
 
-主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录的静态配置保存在 `data/categories.ts`，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。站点内容保存在主页和分类静态配置中，未来可替换为独立的数据获取逻辑。
+主页按 `design/main` 实现侧栏、搜索引擎栏与八张快捷卡片。主页站点数组保存在 `+page.svelte`；侧栏分类和子分类目录由 `data/navigation-config.ts` 从配置文件生成，使用稳定 ID；除固定推荐入口外，它们属于可定制内容，不进入翻译资源。站点内容保存在主页和分类静态配置中，未来可替换为独立的数据获取逻辑。
 
 `selected` 和 `visited` 由主页持有，`collapsed` 由 `PortalShell` 持有且默认收起，并通过 `localStorage` 记忆，卡片集合通过 `$derived` 派生；`query` 和 `engine` 为 SearchBar 内部 `$state`。搜索按所选引擎编码关键词并在新标签页打开，不筛选站点。侧栏切换分类或本次页面中的最近访问；访问记录不持久化。桌面支持折叠侧栏，移动端使用原生模态 dialog 提供焦点约束与 Escape 关闭。
 
@@ -93,7 +94,7 @@ HTML 固定使用中文 `lang="zh-CN"` 和 `dir="ltr"`。界面文案集中在 `
 
 分类配置分开存储 `id`（稳定标识 dev）、`label`（侧栏显示名）、`title`（页标题）与 `slug`（URL 标识 development）。改显示名不会改变 URL 或选中状态，slug 支持中文与空格并在生成链接时由 `encodeURIComponent` 编码。每个配置应有唯一的 id 和 slug；slug 是单个路径段，而非任意 URL。
 
-`data/categories.ts` 的导出 API：
+`data/navigation-config.ts` 的导出 API：
 
 - `categoryPages`：静态原型配置，包含递归 children / sites。新增分类只需配置数据，通用页面没有 development 分支。
 - `findCategoryBySlug(slug, pages = categoryPages)`：按已解码 slug 精确查找；不以显示名称猜测、不回退为默认分类。可注入后续用户配置数据源。
